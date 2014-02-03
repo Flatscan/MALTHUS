@@ -5,8 +5,7 @@ package malthus;
  *
  */
 import java.util.BitSet;
-
-import ;
+import malthus.util.Random;
 
 public class Individual
 {
@@ -26,6 +25,15 @@ public class Individual
 		genome = i.genome;
 		fitness = i.fitness;
 		indMuteRate = i.indMuteRate;
+	}
+	
+	public Individual( int size, Random r )
+	{
+		genome = new BitSet( size );
+		for( int i=0; i<size; i++ )
+			genome.get( i, (int) r.nextDouble() * 2 );
+//		fitness = calcFitness();
+//		indMuteRate = ???;
 	}
 	
 	public Individual( Individual p1, Individual p2, Random random)
