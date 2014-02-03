@@ -5,24 +5,58 @@ package malthus;
  *
  */
 import java.util.BitSet;
+import java.math.*;
 
 public class Individual
 {
 	BitSet genome;
 	double fitness;
+	int indMuteRate;
 	
 	public Individual( )
-	{}
+	{
+		genome = new BitSet( 0 );
+		fitness = -1;
+		indMuteRate = -1;
+	}
+	
+	public Individual( Individual i )
+	{
+		genome = i.genome;
+		fitness = i.fitness;
+		indMuteRate = i.indMuteRate;
+	}
 	
 	public Individual( Individual p1, Individual p2 )
-	{}
+	{
+		genome = p1.crossover( p2 );
+//		fitness = calcFitness();
+		indMuteRate = (int) calcMuteRate( p1.indMuteRate, p2.indMuteRate ) * genome.size();
+	}
 	
-	public BitSet crossover( Individual p1, Individual p2 )
-	{ return new BitSet(); }
+	public BitSet crossover( Individual p2 )
+	{
+		BitSet newGenome = new BitSet( genome.length() );
+		int crossPnt = (int) Math.floor( Math.random() * genome.length() ); 
+		
+		for( int i=0; i < crossPnt ; i++ )
+			newGenome.set( i, this.genome.get( i ) );
+		for( int i=crossPnt; i < genome.length() ; i++ )
+			newGenome.set( i, p2.genome.get( i ) );
+		
+		return newGenome; 
+	}
 	
-	public void mutate( BitSet g )
-	{}
-	
-	public void mutate( BitSet g, double rate )
-	{}
+	public void mutate( )
+	{
+		for( int i=0; i < this.indMuteRate; i++ )
+		{
+			int mutePnt = (int) Math.floor( Math.random() * genome.size() );
+			genome.set( mutePnt, !genome.get( mutePnt ) );
+		}
+	}
+	private double calcMuteRate( double m1, double m2 )
+	{
+		return ( m1 + m2 ) / 2;
+	}
 }
