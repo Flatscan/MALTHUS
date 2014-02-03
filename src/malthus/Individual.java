@@ -5,7 +5,8 @@ package malthus;
  *
  */
 import java.util.BitSet;
-import java.math.*;
+
+import ;
 
 public class Individual
 {
@@ -27,17 +28,17 @@ public class Individual
 		indMuteRate = i.indMuteRate;
 	}
 	
-	public Individual( Individual p1, Individual p2 )
+	public Individual( Individual p1, Individual p2, Random random)
 	{
-		genome = p1.crossover( p2 );
+		genome = p1.crossover( p2, random );
 //		fitness = calcFitness();
 		indMuteRate = (int) calcMuteRate( p1.indMuteRate, p2.indMuteRate ) * genome.size();
 	}
 	
-	public BitSet crossover( Individual p2 )
+	public BitSet crossover( Individual p2, Random random)
 	{
 		BitSet newGenome = new BitSet( genome.length() );
-		int crossPnt = (int) Math.floor( Math.random() * genome.length() ); 
+		int crossPnt = (int) Math.floor( random.nextFloat() * genome.length() ); 
 		
 		for( int i=0; i < crossPnt ; i++ )
 			newGenome.set( i, this.genome.get( i ) );
