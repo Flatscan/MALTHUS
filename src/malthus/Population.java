@@ -7,7 +7,7 @@ package malthus;
 public class Population
 {
 	/****** DEFAULT CONTANTS *****/
-	float  static final MUTATION_RATE_DEFAULT = 0.1f;
+	static final float MUTATION_RATE_DEFAULT = 0.1f;
 
 	Individual[] generation;
 
