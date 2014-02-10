@@ -9,7 +9,10 @@ public class Population
 	/****** DEFAULT CONTANTS *****/
 	static final float MUTATION_RATE_DEFAULT = 0.1f;
 
-	Individual[] generation;
+	private Individual[] generation;
+	private double populationFitness;
+	private int fittest;
+	private int leastFit;
 
 	float mutationRate;
 	
@@ -22,6 +25,23 @@ public class Population
 	private void testFitness(  )
 	{}
 	private Individual[] selectBreedingPool( )
-	{}
+	{return generation;}
+	public double getPopulationFitness()
+	{
+		return populationFitness;
+	}
+	public double getMeanPopulationFitness()
+	{
+		return populationFitness / generation.length;
+	}
+	public Individual getFittest()
+	{
+		return generation[fittest];
+	}
+	public Individual getLeastFit()
+	{
+		return generation[leastFit];
+	}
+
 	
 }

@@ -26,7 +26,7 @@ public class Individual
  * 
  * @see #genotype
  */
-	public static Map phenotype;
+	private static Map phenotype;
 /**
  * How quality of a solution that determines whether it ends up in the 
  * mating pool.
