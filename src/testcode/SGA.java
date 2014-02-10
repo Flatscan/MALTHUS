@@ -13,7 +13,7 @@ public class SGA
 	public static final int GENOME_SIZE = 30;
 //	public static final int CROSSOVER_POINT = 10;
 	public static final double MUTATION_RATE = .0333;
-	public static final int NUMBER_OF_GENERATIONS = 1001;
+	public static final int NUMBER_OF_GENERATIONS = 1000;
 	
 	public static double[] generation = new double[NUMBER_OF_GENERATIONS];
 	public static Individual[] population = new Individual[POPULATION_SIZE];
@@ -26,16 +26,15 @@ public class SGA
 		double acc = 0.0;
 		
 		int i = 0;
-		while(acc <= rand && i < POPULATION_SIZE - 1) 
+		while(acc <= rand && i < POPULATION_SIZE) 
 		{ 
 			acc += population[i].fitness;
 			i++;
 		}
 		
-		return i;
-
-		
+		return i - 1;
 	}
+	
 	public static void generateNewPopulation( Individual[] pop )
 	{
 		sumFitness = 0;
@@ -112,9 +111,9 @@ public class SGA
 
 			int crossoverPoint = (int) Math.floor( Math.random() * GENOME_SIZE );
 			
-			for( int i=0; i<crossoverPoint; i++ )
+			for( int i=0; i<5; i++ )
 				genotype[i] = i1.genotype[i];
-			for( int i=crossoverPoint; i<GENOME_SIZE; i++ )
+			for( int i=5; i<GENOME_SIZE; i++ )
 				genotype[i] = i2.genotype[i];
 			
 			fitness = evaluateFitness( decode( this ) );
