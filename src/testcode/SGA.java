@@ -13,12 +13,13 @@ public class SGA
 	public static final int GENOME_SIZE = 30;
 //	public static final int CROSSOVER_POINT = 10;
 	public static final double MUTATION_RATE = .0333;
-	public static final int NUMBER_OF_GENERATIONS = 1000;
+	public static final int NUMBER_OF_GENERATIONS = 1000000;
 	
 	public static double[] generation = new double[NUMBER_OF_GENERATIONS];
 	public static Individual[] population = new Individual[POPULATION_SIZE];
 	public static double sumFitness = 0;
 	public static int currentGeneration = 0;
+	public static double fittestSolution = 0.0;
 	
 	public static int select( double sumFitness )
 	{
@@ -81,10 +82,12 @@ public class SGA
 		
 		System.out.println( generation[ currentGeneration - 1 ] );
 		
-		while( currentGeneration < NUMBER_OF_GENERATIONS )
+		while( fittestSolution < .9 )
 		{
+			fittestSolution = 0.0;
 			generateNewPopulation( population );
-			System.out.println( generation[ currentGeneration - 1 ] );
+			if( currentGeneration % 100000 == 0 )
+				System.out.println( currentGeneration + "," + generation[ currentGeneration - 1 ] + "," + fittestSolution );
 		}
 	}
 	 
@@ -117,6 +120,8 @@ public class SGA
 				genotype[i] = i2.genotype[i];
 			
 			fitness = evaluateFitness( decode( this ) );
+			if( fitness > fittestSolution )
+				fittestSolution = fitness;
 		}
 		
 		public String toString( )

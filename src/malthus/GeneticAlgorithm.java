@@ -1,6 +1,7 @@
 package malthus;
 /**
  * @author MalcolmRoss
+ * @author HaoNguyen
  * @version 0.0
  *
  */

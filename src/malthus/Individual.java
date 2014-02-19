@@ -1,12 +1,12 @@
 package malthus;
 /**
  * @author MalcolmRoss
- * @author Hao Nguyen
+ * @author HaoNguyen
  * @version 0.0
  * 
- * CURRENT TO DO:	-Write Map class/functions
- * 					-Write a calcFitness function
- * 					-Write an enum DEFAULT class for testing constants
+ * CURRENT TO DO (week 8):	-Write Map class/functions
+ * 							-Write a calcFitness function
+ * 							-Write an enum DEFAULT class for testing constants
  *
  */
 import java.util.BitSet;
@@ -17,33 +17,40 @@ public class Individual
 {
 /**
  * A representation of the users data set/solution space as a string of bits.
+ * Will be extended in the future the Map functions will to take the user
+ * data and find the best way to represent it based on empirical information.
  * 
  * @see #phenotype
  */
 	private BitSet genotype;
 /**
  * How a particular genotype is mapped to the users representation of the data.
+ * This will be implemented with the Map utility class and will appear to the 
+ * user the same, regardless of changes done by GA optimization.
  * 
  * @see #genotype
  */
 	private static Map phenotype;
 /**
- * How quality of a solution that determines whether it ends up in the 
- * mating pool.
+ * The relative quality of a solution based on the user's implementation of the
+ * CalcFitness interface. If none is provided, the default implementation will
+ * be used. 
  * 
  * @see #testFitness
  * @see #selectBreedingPool()
  */
 	private double fitness;
 /**
- *  The number of bits an Individual mutates when mutate() is called.
+ *  The number of bits in an Individual mutates when mutate() is called.
+ *  This happens based on the population mutation rate. 
  *  
  *  @see #mutate()
  */
 	private int indMuteRate;
 	
 /**
- * 	Default constructor.
+ * Default constructor.
+ * Not to be used.
  */
 	public Individual( )
 	{
@@ -52,7 +59,6 @@ public class Individual
 		fitness = -1;
 		indMuteRate = -1;
 	}
-	
 /**
  * Copy constructor.
  * 
@@ -66,7 +72,7 @@ public class Individual
 	}
 /**
  * Real "default" constructor to only be used for initializing the members 
- * of the first generation.
+ * of the first generation by randomly creating individuals.
  * 
  * @param size length of the solution string.
  * @param r Random object used by the population. 
@@ -99,7 +105,7 @@ public class Individual
 		indMuteRate = (int) calcMuteRate( p1.indMuteRate, p2.indMuteRate ) * genotype.size();
 	}
 /**
- * Takes the genotype of the caller and the argument parent Individual and
+ * Takes the genotype of the caller and the argument parent Individuala and
  * fills in a new BitSet up to a point (determined by the population's Random
  * object) from the caller and the rest from the argument.
  * 
@@ -107,7 +113,7 @@ public class Individual
  * @param random
  * @return BitSet newGenotype
  */
-	public BitSet crossover( Individual p2, Random random)
+	private BitSet crossover( Individual p2, Random random)
 	{
 		BitSet newGenotype = new BitSet( genotype.length() );
 		int crossPnt = (int) Math.floor( random.nextFloat() * genotype.length() ); 
@@ -120,9 +126,9 @@ public class Individual
 		return newGenotype; 
 	}
 /**
- * 
+ * Flips the value of random bits in an Individual's genome. 
  */
-	public void mutate( )
+	private void mutate( )
 	{
 		for( int i=0; i < this.indMuteRate; i++ )
 		{
@@ -133,6 +139,7 @@ public class Individual
 /**
  * Takes two doubles that correspond to the mutation rate of two parent Individuals
  * and returns the average of them to be used as the mutation rate of the child.
+ * 
  * @param m1
  * @param m2
  * @return double Average(m1,m2)
@@ -141,5 +148,14 @@ public class Individual
 	private double calcMuteRate( double m1, double m2 )
 	{
 		return ( m1 + m2 ) / 2;
+	}
+/**
+ * Returns the fitness of the caller Individual.
+ * 
+ * @return fitness
+ */
+	public double getFitness() 
+	{
+		return this.fitness;
 	}
 }
