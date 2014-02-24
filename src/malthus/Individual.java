@@ -10,10 +10,12 @@ package malthus;
  *
  */
 import java.util.BitSet;
+import java.util.Vector;
+
 import malthus.util.Map;
 import malthus.util.Random;
 
-public class Individual
+public class Individual<T>
 {
 /**
  * A representation of the users data set/solution space as a string of bits.
@@ -22,7 +24,7 @@ public class Individual
  * 
  * @see #phenotype
  */
-	private BitSet genotype;
+	protected Vector<T> genotype;
 /**
  * How a particular genotype is mapped to the users representation of the data.
  * This will be implemented with the Map utility class and will appear to the 
@@ -54,7 +56,7 @@ public class Individual
  */
 	public Individual( )
 	{
-		genotype = new BitSet( 0 );
+		genotype = new Vector<T>( 0 );
 //		phenotype = new Map(0);
 		fitness = -1;
 		indMuteRate = -1;
@@ -64,7 +66,7 @@ public class Individual
  * 
  * @param i individual to be copied. 
  */
-	public Individual( Individual i )
+	public Individual( Individual<T> i )
 	{
 		genotype = i.genotype;
 		fitness = i.fitness;
@@ -79,9 +81,9 @@ public class Individual
  */
 	public Individual( int size, Random r )
 	{
-		genotype = new BitSet( size );
+		genotype = new Vector<T>( size );
 		for( int i=0; i<size; i++ )
-			genotype.get( i, (int) r.nextDouble() * 2 );
+			genotype.setElementAt( i, (int) r.nextDouble() * 2 );
 //		fitness = calcFitness();
 //		indMuteRate = ???;
 	}
@@ -98,7 +100,7 @@ public class Individual
  * @see #calcFitness()
  * @see #mutate()
  */
-	public Individual( Individual p1, Individual p2, Random random)
+	public Individual( Individual<T> p1, Individual<T> p2, Random random)
 	{
 		genotype = p1.crossover( p2, random );
 //		fitness = calcFitness();
@@ -113,15 +115,15 @@ public class Individual
  * @param random
  * @return BitSet newGenotype
  */
-	private BitSet crossover( Individual p2, Random random)
+	private Vector crossover( Individual p2, Random random)
 	{
-		BitSet newGenotype = new BitSet( genotype.length() );
+		Vector<Integer> newGenotype = new Vector<Integer>( genotype.length() );
 		int crossPnt = (int) Math.floor( random.nextFloat() * genotype.length() ); 
 		
 		for( int i=0; i < crossPnt ; i++ )
-			newGenotype.set( i, this.genotype.get( i ) );
+			newGenotype.setElementAt( i, this.genotype.elementAt( i ) );
 		for( int i=crossPnt; i < genotype.length() ; i++ )
-			newGenotype.set( i, p2.genotype.get( i ) );
+			newGenotype.setElementAt( i, p2.genotype.elementAt( i ) );
 		
 		return newGenotype; 
 	}

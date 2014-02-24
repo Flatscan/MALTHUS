@@ -9,7 +9,7 @@ import malthus.util.Sort;
  * @version 0.0
  *
  */
-public class Population
+public abstract class Population
 {
 	static final float MUTATION_RATE_DEFAULT = 0.1f;
 
@@ -19,6 +19,13 @@ public class Population
 	private double leastFit;
 
 	float mutationRate;
+	
+	public Population( )
+	{
+		populationFitness = -1;
+		mostFit = -1;
+		leastFit = -1;
+	}
 	
 	public Population( int populationSize, int individualSize, Random r )
 	{
@@ -64,12 +71,10 @@ public class Population
 	}
 	
 	
-	private double calcFitness(  )
-	{ return 0.0; }
-	private int select( )
-	{
-		return (int) ( Math.random() * this.getSize() );
-	}
+	protected abstract double calcFitness( );
+
+	protected abstract int select( );
+	
 	public double getPopulationFitness()
 	{
 		return populationFitness;
