@@ -8,10 +8,10 @@ package malthus;
  */
 public interface Gene
 {
-	public void randomize();
+	public abstract void randomize();
 
-	public boolean equals(Gene gene);
-	public int hashCode();
+	public abstract boolean equals(Gene gene);
+	public abstract int hashCode();
 
-	public int getValue();
+	public abstract double getValue();
 }

@@ -9,7 +9,7 @@ import malthus.GeneticAlgorithm;
  *
  */
 
-public class gcpGeneticAlgorithm extends GeneticAlgorithm
+public class GCPGeneticAlgorithm extends GeneticAlgorithm
 {	
 	
 	public static void main(String[] args)

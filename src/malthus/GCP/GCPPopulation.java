@@ -9,7 +9,7 @@ import malthus.Population;
  * @version 0.0
  *
  */
-public class gcpPopulation extends Population
+public class GCPPopulation extends Population
 {
 
 	//DOES NOT FUNCTION

@@ -1,4 +1,4 @@
-package malthus.GCP;
+package malthus;
 
 /**
  * @author MalcolmRoss
@@ -7,29 +7,20 @@ package malthus.GCP;
  * 
  */
 
-
-import malthus.Gene;
-
-
-public class gcpGene implements Gene 
+public class SimpleGene implements Gene 
 {
 	private static final Configuration configuration = new Configuration();
 	private int value;
 
-
-	public gcpGene(int value)
+	public SimpleGene()
 	{
-		this.value = value;
+		this.value = -1;
 	}
-
-
-	public void randomize()
+	
+	public SimpleGene( int size )
 	{
-		Random random = configuration.getClass("random")
-					.getConstructor().newInstance();
-		return random.nextInt();
+		this.value = (int) Math.floor( Math.random() ) * size;
 	}
-
 
 	public boolean equals(Gene gene) 
 	{
@@ -46,5 +37,12 @@ public class gcpGene implements Gene
 	public int getValue()
 	{
 		return this.value;
+	}
+
+	@Override
+	public void randomize()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

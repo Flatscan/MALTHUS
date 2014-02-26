@@ -16,7 +16,7 @@ import malthus.Individual;
 import malthus.util.Map;
 import malthus.util.Random;
 
-public class gcpIndividual extends Individual<Integer>
+public class GCPIndividual extends Individual<Integer>
 {
 /**
  * A representation of the users data set/solution space as a string of bits.
@@ -35,7 +35,7 @@ public class gcpIndividual extends Individual<Integer>
  * @param random
  * @return BitSet newGenotype
  */
-	private Vector<Integer> crossover( gcpIndividual p2, Random random)
+	private Vector<Integer> crossover( GCPIndividual p2, Random random)
 	{
 		BitSet newGenotype = new BitSet( genotype.length() );
 		int crossPnt = (int) Math.floor( random.nextFloat() * genotype.length() ); 
