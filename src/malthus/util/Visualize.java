@@ -7,5 +7,5 @@ package malthus.util;
 
 public class Visualize
 {
-
+	
 }
