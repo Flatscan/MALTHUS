@@ -21,14 +21,7 @@ public abstract class Individual
  */
 	protected Vector<Gene> genotype;
 
-/**
- * The maximum value a particular Gene can have when mapped onto the natural 
- * numbers, counting from zero.
- * 
- * @see #genotype
- */
-	private int geneMax;
-	
+
 /**
  * The relative quality of a solution based on the user's implementation of the
  * testFitness function.
@@ -45,13 +38,13 @@ public abstract class Individual
  *  
  *  @see #mutate()
  */
-	protected int individualMutationRate;
+	protected double individualMutationRate;
 	
 	
 /**
  * No argument constructor. Not to be used!
  */
-	public Individual( )
+	public Individual()
 	{
 		genotype = new Vector<Gene>( 0 );
 		fitness = -1;
@@ -81,17 +74,16 @@ public abstract class Individual
  * @param size length of the solution string.
  * @param r Random object used by the Population. 
  */
-	public Individual( int size, int range , Random r )
+	public Individual( int size, Random r )
 	{
-		geneMax = range;
 		genotype = new Vector<Gene>( size );
 		for( int i=0; i<size; i++ )
-			genotype.set( i, new SimpleGene( range ) );
+			( genotype.get( i ) ).randomize( r );
 //		fitness = calcFitness();
-//		indMuteRate = ???;
+		individualMutationRate = .01;
 	}
-	
-	
+
+
 /**
  * Standard constructor. Takes two parent Individuals and calls crossover() at 
  * a random Gene (rounded down) along the genotype. It then calculates the fitness 
@@ -144,12 +136,12 @@ public abstract class Individual
  *  @see #geneMax
  */
 	@SuppressWarnings("unused")
-	private void mutate( )
+	private void mutate( double range, Random r )
 	{
 		for( int i=0; i < this.individualMutationRate; i++ )
 		{
 			int mutePnt = (int) Math.floor( Math.random() * genotype.size() );
-			genotype.set( mutePnt, new SimpleGene( (int) Math.floor( Math.random() * this.geneMax ) ) );
+			( genotype.get( mutePnt ) ).randomize( r );;
 		}
 	}
 
@@ -164,7 +156,7 @@ public abstract class Individual
  * @return double Average(m1,m2)
  * @see #indMuteRate
  */
-	private double calculateMutationRate( double m1, double m2 )
+	protected double calculateMutationRate( double m1, double m2 )
 	{
 		return ( m1 + m2 ) / 2;
 	}

@@ -15,9 +15,11 @@ public abstract class Population
 {
 	static final float MUTATION_RATE_DEFAULT = 0.1f;
 
-	private Individual[] generation;
+	public Individual[] generation;
 	private double populationFitness;
+	@SuppressWarnings("unused")
 	private double mostFit;
+	@SuppressWarnings("unused")
 	private double leastFit;
 
 	float mutationRate;
@@ -28,51 +30,8 @@ public abstract class Population
 		mostFit = -1;
 		leastFit = -1;
 	}
-	
-	public Population( int populationSize, int individualSize, Random r )
-	{
-		generation = new Individual[populationSize]; 
-		
-		for( int i=0; i<populationSize; i++ )
-			generation[i] = new Individual( individualSize, r );
-		
-		Sort.insertion( generation );
-		populationFitness = calcFitness();
-		mostFit = generation[0].getFitness();
-		leastFit = generation[ populationSize - 1 ].getFitness(); 
-	}
-	
-	public Population( Population previousGeneration, Random r )
-	{
-		generation = new Individual[ previousGeneration.getSize() ];
-		
-		for( int i=0; i<previousGeneration.getSize(); i++ )
-			generation[i] = new Individual( previousGeneration.generation[ select() ], previousGeneration.generation[ select() ], r );
-		
-		Sort.insertion( generation );
-		populationFitness = calcFitness();
-		mostFit = generation[0].getFitness();
-		leastFit = generation[ previousGeneration.getSize() - 1 ].getFitness();	
-		}
-	
-	public Population( Population previousGeneration, int fitnessThreshold, Random r )
-	{
-		generation = new Individual[ previousGeneration.getSize() ];
-		Individual[] breedingPool = new Individual[ fitnessThreshold ];
-		
-		for( int i=0; i<fitnessThreshold; i++ )
-			breedingPool[i] = previousGeneration.generation[i];
-		
-		for( int i=0; i<previousGeneration.getSize(); i++ )
-			generation[i] = new Individual( breedingPool[ select() ], breedingPool[ select() ], r );
-	
-		Sort.insertion( generation );
-		populationFitness = calcFitness();
-		mostFit = generation[0].getFitness();
-		leastFit = generation[ previousGeneration.getSize() - 1 ].getFitness();	
-	}
-	
-	
+
+
 	protected abstract double calcFitness( );
 
 	protected abstract int select( );
@@ -81,10 +40,12 @@ public abstract class Population
 	{
 		return populationFitness;
 	}
+	
 	public double getMeanPopulationFitness()
 	{
 		return populationFitness / generation.length;
 	}
+	
 	public int getSize()
 	{
 		return generation.length;
