@@ -6,35 +6,32 @@ package malthus;
  * @version 0.0
  * 
  */
-
-import malthus.util.Random;
-
-public interface Gene
+public abstract class Gene<T extends Comparable<T>>
 {
- /**
-  * Randomly sets the value of a given Gene based on the value
-  * derived from the Random object. It is called in the Individual's
-  * mutation function as well as its "random" construct.
-  * 
-  */
-	public abstract void randomize( Random r );
+	protected Configuration conf;
 
- /**
-  * Tests for the equality between two Genes.
-  * 
-  */
+	private T data;
 
-	public abstract boolean equals(Gene gene);
+	public Gene() {
+		this.data = randomize();	
+	}
 
-	
-	public abstract int hashCode();
 
-/**
-  * Returns the double representation of the value stored
-  * in a given Gene.
-  * 
-  */
-	
+	public Gene(T data) {
+		this.data = data;
+	}
+
+
+	public int compareTo(Gene<T> gene) {
+		return this.data.compareTo(gene.get());
+	}
+
+
+	public T get() {
+		return this.data;
+	}
+
+
+	protected abstract T randomize();
 	public abstract double getValue();
-
 }

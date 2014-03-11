@@ -1,7 +1,4 @@
-package malthus.GCP;
-
-import malthus.GeneticAlgorithm;
-
+package malthus;
 /**
  * @author MalcolmRoss
  * @author HaoNguyen
@@ -9,7 +6,7 @@ import malthus.GeneticAlgorithm;
  *
  */
 
-public class GCPGeneticAlgorithm extends GeneticAlgorithm
+public class GeneticAlgorithm
 {	
 	
 	public static void main(String[] args)

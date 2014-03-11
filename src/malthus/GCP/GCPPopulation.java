@@ -14,72 +14,21 @@ import malthus.GCP.GCPIndividual;
  */
 public class GCPPopulation extends Population
 {
-
-
-	static final float MUTATION_RATE_DEFAULT = 0.1f;
-
-	private GCPIndividual[] generation;
-	@SuppressWarnings("unused")
-	private double populationFitness;
-	@SuppressWarnings("unused")
-	private double mostFit;
-	@SuppressWarnings("unused")
-	private double leastFit;
-
-	float mutationRate;
-	
-	public GCPPopulation( int populationSize, int individualSize, Random r )
+	protected  int selectIndividuals( )
 	{
-		generation = new GCPIndividual[populationSize]; 
-		
-		for( int i=0; i<populationSize; i++ )
-			generation[i] = new GCPIndividual( individualSize, r );
-		
-		Sort.insertion( generation );
-		populationFitness = calcFitness();
-		mostFit = generation[0].getFitness();
-		leastFit = generation[ populationSize - 1 ].getFitness(); 
+		Individual[] selected;
+
+		selected = new Individual[this.generation.length / 2];
+		for(int i = 0; i < selected.length; i++)
+			selected[i] = this.generation[i];
+
+		return selected;
+	}		
+
+
+	protected int selectParent()
+	{
+		Random rand = new Random();
+		return rand.nextInt(this.generation.length / 2);
 	}
-	
-	public GCPPopulation( GCPPopulation previousGeneration, Random r )
-	{
-		generation = new GCPIndividual[ previousGeneration.getSize() ];
-		
-		for( int i=0; i<previousGeneration.getSize(); i++ )
-			generation[i] = new GCPIndividual( (GCPIndividual) previousGeneration.generation[ select() ], (GCPIndividual) previousGeneration.generation[ select() ], r );
-
-		Sort.insertion( generation );
-		populationFitness = calcFitness();
-		mostFit = generation[0].getFitness();
-		leastFit = generation[ previousGeneration.getSize() - 1 ].getFitness();	
-		}
-	
-	public GCPPopulation( GCPPopulation previousGeneration, int fitnessThreshold, Random r )
-	{
-		generation = new GCPIndividual[ previousGeneration.getSize() ];
-		GCPIndividual[] breedingPool = new GCPIndividual[ fitnessThreshold ];
-		
-		for( int i=0; i<fitnessThreshold; i++ )
-			breedingPool[i] = previousGeneration.generation[i];
-		
-		for( int i=0; i<previousGeneration.getSize(); i++ )
-			generation[i] = new GCPIndividual( (GCPIndividual) breedingPool[ select() ], (GCPIndividual) breedingPool[ select() ], r );
-	
-		Sort.insertion( generation );
-		populationFitness = calcFitness();
-		mostFit = generation[0].getFitness();
-		leastFit = generation[ previousGeneration.getSize() - 1 ].getFitness();	
-	}
-	
-	
-	protected  double calcFitness( )
-	{
-		return -1.0;
-	}
-
-	protected  int select( )
-	{
-		return -1;
-	}	
-	
 }
