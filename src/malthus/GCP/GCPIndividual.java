@@ -67,7 +67,6 @@ public GCPIndividual( GCPIndividual p1, GCPIndividual p2, Random r )
  * @param random
  * @return Vector<SimpleGene> newGenotype
  */
-	@SuppressWarnings("unused")
 	private Vector<SimpleGene> crossover( GCPIndividual p2, Random random)
 	{
 		Vector<SimpleGene> newGenotype = new Vector<SimpleGene>( genotype.size() );

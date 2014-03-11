@@ -41,7 +41,7 @@ public class GCPPopulation extends Population
 		leastFit = generation[ populationSize - 1 ].getFitness(); 
 	}
 	
-	public GCPPopulation( Population previousGeneration, Random r )
+	public GCPPopulation( GCPPopulation previousGeneration, Random r )
 	{
 		generation = new GCPIndividual[ previousGeneration.getSize() ];
 		

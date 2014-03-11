@@ -30,7 +30,7 @@ public class Sort
 		arr[b] = temp;
 	}
 
-	public static void heap( Individual[] individuals )
+	public static void heapSort( Individual[] individuals )
 	{
 		int n = individuals.length - 1;
 		
