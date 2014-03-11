@@ -17,6 +17,7 @@ import malthus.util.Random;
 
 public class GCPIndividual extends Individual
 {
+<<<<<<< HEAD
 /**
  * A representation of the users data set/solution space as a string of bits.
  * Will be extended in the future the Map functions will to take the user
@@ -101,6 +102,11 @@ public GCPIndividual( GCPIndividual p1, GCPIndividual p2, Random r )
 			int mutationPoint = (int) Math.floor( r.nextDouble() * genotype.size() );
 			( genotype.get( mutationPoint ) ).randomize( r );
 		}
+=======
+	protected double calcFitness()
+	{
+		// Waiting to be implemented
+>>>>>>> FETCH_HEAD
 	}
 
 }
