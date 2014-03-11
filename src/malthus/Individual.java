@@ -8,10 +8,11 @@ package malthus;
 
 import java.util.Vector;
 
+import malthus.SimpleGene;
+import malthus.util.Random;
+
 public abstract class Individual
 {
-	protected Configuration conf;
-
 /**
  * A representation of the users data set/solution space as a Vector of Genes,
  * an interface that the user will have to implement for their particular needs.
@@ -41,7 +42,6 @@ public abstract class Individual
 	
 	
 /**
-<<<<<<< HEAD
  * No argument constructor. Not to be used!
  */
 	public Individual()
@@ -53,17 +53,13 @@ public abstract class Individual
 
 	
 /**
-=======
->>>>>>> FETCH_HEAD
  * A simple copy constructor.
  * 
  * @param i individual to be copied. 
  */
 	public Individual( Individual i )
 	{
-		this.conf = new Configuration();
-
-		genotype = i.genotype.clone();
+		genotype = i.genotype;
 		fitness = i.fitness;
 		individualMutationRate = i.individualMutationRate;
 	}
@@ -78,7 +74,6 @@ public abstract class Individual
  * @param size length of the solution string.
  * @param r Random object used by the Population. 
  */
-<<<<<<< HEAD
 	public Individual( int size, Random r )
 	{
 		genotype = new Vector<Gene>( size );
@@ -86,26 +81,6 @@ public abstract class Individual
 			( genotype.get( i ) ).randomize( r );
 //		fitness = calcFitness();
 		individualMutationRate = .01;
-=======
-	public Individual( )
-	{
-		this.conf = new Configuration();
-
-		Map<Integer, Class<? extends Gene>> phenotype = (Map<Integer, Class<? extends Gene>>) this.conf.get("phenotype");
-		int size = (Integer) this.conf.get("gene_size");
-		
-		// Randomize genotype
-		this.genotype = new Vector<Gene>( size );
-		for( int i = 0; i < size; i++ )
-		{
-			Gene gene = phenotype.get(i).getConstructor().newInstance();
-			this.genotype.setElementAt(gene, i);
-		}
-
-		
-		//Calculate fitness
-		this.fitness = calFitness();
->>>>>>> FETCH_HEAD
 	}
 
 
@@ -122,13 +97,10 @@ public abstract class Individual
  * @see #calcFitness()
  * @see #mutate()
  */
-	public Individual( Individual p1, Individual p2)
+	public Individual( Individual p1, Individual p2, Random random)
 	{
-		this.conf = new Configuration();
-
-		genotype = p1.crossover(p2);
-		fitness = calcFitness();
-
+		genotype = p1.crossover( p2, random );
+//		fitness = calcFitness();
 		individualMutationRate = (int) calculateMutationRate( p1.individualMutationRate, p2.individualMutationRate ) * genotype.size();
 	}
 	
@@ -143,19 +115,17 @@ public abstract class Individual
  * @param random
  * @return Vector<Gene> newGenotype
  */
-	protected Vector<Gene> crossover( Individual p2)
+	private Vector<Gene> crossover( Individual p2, Random random)
 	{
-		Random random = (Random) this.conf.get("random");
-
 		Vector<Gene> newGenotype = new Vector<Gene>( genotype.size() );
 		int crossPnt = (int) Math.floor( random.nextFloat() * genotype.size() ); 
 		
 		for( int i=0; i < crossPnt ; i++ )
-			newGenotype.setElementAt( this.genotype.elementAt( i ).clone(), i);
+			newGenotype.set( i, (SimpleGene) this.genotype.elementAt( i ) );
 		for( int i=crossPnt; i < genotype.size() ; i++ )
-			newGenotype.setElementAt( p2.genotype.elementAt( i ).clone(), i);
+			newGenotype.set( i, (SimpleGene) p2.genotype.elementAt( i ) );
 		
-		return newGenotype;
+		return newGenotype; 
 	}
 	
 	
@@ -166,26 +136,12 @@ public abstract class Individual
  *  @see #geneMax
  */
 	@SuppressWarnings("unused")
-<<<<<<< HEAD
 	private void mutate( double range, Random r )
 	{
 		for( int i=0; i < this.individualMutationRate; i++ )
 		{
 			int mutePnt = (int) Math.floor( Math.random() * genotype.size() );
 			( genotype.get( mutePnt ) ).randomize( r );;
-=======
-	protected void mutate( )
-	{
-		for( int i=0; i < this.individualMutationRate; i++ )
-		{
-			Random random = (Random) this.conf.get("random");
-			Map<Integer, Class<? extends Gene>> phenotype = this.conf.get("phenotype");
-
-			// Randomize a gene
-			int mutePnt = (int) Math.floor( random.nextFloat() * genotype.size() );
-			Gene gene = phenotype.get(i).getConstructor().newInstance();
-			genotype.set( mutePnt, gene);
->>>>>>> FETCH_HEAD
 		}
 	}
 
@@ -204,13 +160,6 @@ public abstract class Individual
 	{
 		return ( m1 + m2 ) / 2;
 	}
-
-
-/**
- *
- *
- */
- 	protected abstract double calcFitness();
 
 	
 /**
