@@ -15,80 +15,99 @@ public abstract class Population
 {
 	static final float MUTATION_RATE_DEFAULT = 0.1f;
 
-	private Individual[] generation;
-	private double populationFitness;
-	private double mostFit;
-	private double leastFit;
+	protected Configuration conf;
+
+	protected Individual[] generation;
+
+	protected double populationFitness;
+	@SuppressWarnings("unused")
+	protected double mostFit;
+	@SuppressWarnings("unused")
+	protected double leastFit;
 
 	float mutationRate;
 	
 	public Population( )
 	{
-		populationFitness = -1;
-		mostFit = -1;
-		leastFit = -1;
-	}
-	
-	public Population( int populationSize, int individualSize, Random r )
-	{
-		generation = new Individual[populationSize]; 
-		
-		for( int i=0; i<populationSize; i++ )
-			generation[i] = new Individual( individualSize, r );
-		
-		Sort.insertion( generation );
-		populationFitness = calcFitness();
-		mostFit = generation[0].getFitness();
-		leastFit = generation[ populationSize - 1 ].getFitness(); 
-	}
-	
-	public Population( Population previousGeneration, Random r )
-	{
-		generation = new Individual[ previousGeneration.getSize() ];
-		
-		for( int i=0; i<previousGeneration.getSize(); i++ )
-			generation[i] = new Individual( previousGeneration.generation[ select() ], previousGeneration.generation[ select() ], r );
-		
-		Sort.insertion( generation );
-		populationFitness = calcFitness();
-		mostFit = generation[0].getFitness();
-		leastFit = generation[ previousGeneration.getSize() - 1 ].getFitness();	
-		}
-	
-	public Population( Population previousGeneration, int fitnessThreshold, Random r )
-	{
-		generation = new Individual[ previousGeneration.getSize() ];
-		Individual[] breedingPool = new Individual[ fitnessThreshold ];
-		
-		for( int i=0; i<fitnessThreshold; i++ )
-			breedingPool[i] = previousGeneration.generation[i];
-		
-		for( int i=0; i<previousGeneration.getSize(); i++ )
-			generation[i] = new Individual( breedingPool[ select() ], breedingPool[ select() ], r );
-	
-		Sort.insertion( generation );
-		populationFitness = calcFitness();
-		mostFit = generation[0].getFitness();
-		leastFit = generation[ previousGeneration.getSize() - 1 ].getFitness();	
-	}
-	
-	
-	protected abstract double calcFitness( );
+		this.conf = new Configuration();
 
-	protected abstract int select( );
+		// Initilize Population
+		int size = (Integer) this.conf.get("population_size");
+		this.generation = new Individual[this.size];
+		for(int i = 0; i < this.generation.length; i++)
+			this.generation[i] = new Individual();
+
+		// Subject to changes for a better sorting algorithm
+		Sort.heap(generation);
+
+		calStatistics();
+	}
+
+
+	public Population(Population previousPopulation) 
+	{
+		this.conf = new Configuration;
+
+		// Initilize Population
+		int size = (Integer) this.conf.get("population_size");
+		this.generation = new Individual[this.size];
+
+		// Generate New Population
+		Individual[] selected = previousPopulation.selectIndividuals();
+		for(int i = 0 ; i < this.generation.length; i++)
+			generation[i] = new Individual(selected[selectParent()], selected[selectParent()]);
+		
+		// Subject to changes for a better sorting algorithm
+		Sort.heap(generation);
+
+		calStatistics();
+
+	}
+
+
+	private void calStatistics()
+	{
+		double max = Double.MAX_VALUE;
+		double min = Double.MIN_VALUE;
+		double ave = 0.0;
+
+
+		for(int i = 0; i < this.generation.length; i++) {
+			// Maximum
+			max = (max < this.generation[i].getFitness()) ? this.generation[i].getFitness() : max;
+			
+			// Minimum
+			min = (min > this.generation[i].getFitness()) ? this.generation[i].getFitness() : min;
+
+
+			// Average
+			ave += this.generation[i].getFitness();
+		}
+
+		this.mostFit = max;
+		this.leastFit = min;
+		this.populationFitness = (ave / (double) this.generation.length);
+	}
+
+
+	protected abstract Individual[] selectIndividuals( );
+	protected abstract int selectParent( );
 	
+
 	public double getPopulationFitness()
 	{
 		return populationFitness;
 	}
+	
+
 	public double getMeanPopulationFitness()
 	{
-		return populationFitness / generation.length;
+		return populationFitness;
 	}
+	
+
 	public int getSize()
 	{
 		return generation.length;
 	}
-
-	
 }

@@ -8,11 +8,10 @@ package malthus;
 
 import java.util.Vector;
 
-import malthus.SimpleGene;
-import malthus.util.Random;
-
 public abstract class Individual
 {
+	protected Configuration conf;
+
 /**
  * A representation of the users data set/solution space as a Vector of Genes,
  * an interface that the user will have to implement for their particular needs.
@@ -21,14 +20,7 @@ public abstract class Individual
  */
 	protected Vector<Gene> genotype;
 
-/**
- * The maximum value a particular Gene can have when mapped onto the natural 
- * numbers, counting from zero.
- * 
- * @see #genotype
- */
-	private int geneMax;
-	
+
 /**
  * The relative quality of a solution based on the user's implementation of the
  * testFitness function.
@@ -49,24 +41,15 @@ public abstract class Individual
 	
 	
 /**
- * No argument constructor. Not to be used!
- */
-	public Individual( )
-	{
-		genotype = new Vector<Gene>( 0 );
-		fitness = -1;
-		individualMutationRate = -1;
-	}
-
-	
-/**
  * A simple copy constructor.
  * 
  * @param i individual to be copied. 
  */
 	public Individual( Individual i )
 	{
-		genotype = i.genotype;
+		this.conf = new Configuration();
+
+		genotype = i.genotype.clone();
 		fitness = i.fitness;
 		individualMutationRate = i.individualMutationRate;
 	}
@@ -81,14 +64,24 @@ public abstract class Individual
  * @param size length of the solution string.
  * @param r Random object used by the Population. 
  */
-	public Individual( int size, int range , Random r )
+	public Individual( )
 	{
-		geneMax = range;
-		genotype = new Vector<Gene>( size );
-		for( int i=0; i<size; i++ )
-			genotype.set( i, new SimpleGene( range ) );
-//		fitness = calcFitness();
-//		indMuteRate = ???;
+		this.conf = new Configuration();
+
+		Map<Integer, Class<? extends Gene>> phenotype = (Map<Integer, Class<? extends Gene>>) this.conf.get("phenotype");
+		int size = (Integer) this.conf.get("gene_size");
+		
+		// Randomize genotype
+		this.genotype = new Vector<Gene>( size );
+		for( int i = 0; i < size; i++ )
+		{
+			Gene gene = phenotype.get(i).getConstructor().newInstance();
+			this.genotype.setElementAt(gene, i);
+		}
+
+		
+		//Calculate fitness
+		this.fitness = calFitness();
 	}
 	
 	
@@ -105,10 +98,13 @@ public abstract class Individual
  * @see #calcFitness()
  * @see #mutate()
  */
-	public Individual( Individual p1, Individual p2, Random random)
+	public Individual( Individual p1, Individual p2)
 	{
-		genotype = p1.crossover( p2, random );
-//		fitness = calcFitness();
+		this.conf = new Configuration();
+
+		genotype = p1.crossover(p2);
+		fitness = calcFitness();
+
 		individualMutationRate = (int) calculateMutationRate( p1.individualMutationRate, p2.individualMutationRate ) * genotype.size();
 	}
 	
@@ -123,17 +119,19 @@ public abstract class Individual
  * @param random
  * @return Vector<Gene> newGenotype
  */
-	private Vector<Gene> crossover( Individual p2, Random random)
+	protected Vector<Gene> crossover( Individual p2)
 	{
+		Random random = (Random) this.conf.get("random");
+
 		Vector<Gene> newGenotype = new Vector<Gene>( genotype.size() );
 		int crossPnt = (int) Math.floor( random.nextFloat() * genotype.size() ); 
 		
 		for( int i=0; i < crossPnt ; i++ )
-			newGenotype.set( i, (SimpleGene) this.genotype.elementAt( i ) );
+			newGenotype.setElementAt( this.genotype.elementAt( i ).clone(), i);
 		for( int i=crossPnt; i < genotype.size() ; i++ )
-			newGenotype.set( i, (SimpleGene) p2.genotype.elementAt( i ) );
+			newGenotype.setElementAt( p2.genotype.elementAt( i ).clone(), i);
 		
-		return newGenotype; 
+		return newGenotype;
 	}
 	
 	
@@ -144,12 +142,17 @@ public abstract class Individual
  *  @see #geneMax
  */
 	@SuppressWarnings("unused")
-	private void mutate( )
+	protected void mutate( )
 	{
 		for( int i=0; i < this.individualMutationRate; i++ )
 		{
-			int mutePnt = (int) Math.floor( Math.random() * genotype.size() );
-			genotype.set( mutePnt, new SimpleGene( (int) Math.floor( Math.random() * this.geneMax ) ) );
+			Random random = (Random) this.conf.get("random");
+			Map<Integer, Class<? extends Gene>> phenotype = this.conf.get("phenotype");
+
+			// Randomize a gene
+			int mutePnt = (int) Math.floor( random.nextFloat() * genotype.size() );
+			Gene gene = phenotype.get(i).getConstructor().newInstance();
+			genotype.set( mutePnt, gene);
 		}
 	}
 
@@ -164,10 +167,17 @@ public abstract class Individual
  * @return double Average(m1,m2)
  * @see #indMuteRate
  */
-	private double calculateMutationRate( double m1, double m2 )
+	protected double calculateMutationRate( double m1, double m2 )
 	{
 		return ( m1 + m2 ) / 2;
 	}
+
+
+/**
+ *
+ *
+ */
+ 	protected abstract double calcFitness();
 
 	
 /**

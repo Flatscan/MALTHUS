@@ -6,12 +6,32 @@ package malthus;
  * @version 0.0
  * 
  */
-public interface Gene
+public abstract class Gene<T extends Comparable<T>>
 {
-	public abstract void randomize();
+	protected Configuration conf;
 
-	public abstract boolean equals(Gene gene);
-	public abstract int hashCode();
+	private T data;
 
+	public Gene() {
+		this.data = randomize();	
+	}
+
+
+	public Gene(T data) {
+		this.data = data;
+	}
+
+
+	public int compareTo(Gene<T> gene) {
+		return this.data.compareTo(gene.get());
+	}
+
+
+	public T get() {
+		return this.data;
+	}
+
+
+	protected abstract T randomize();
 	public abstract double getValue();
 }
