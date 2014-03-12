@@ -1,7 +1,14 @@
+package malthus.GCP;
+
+
+import malthus.Gene;
+import malthus.Phenotype;
+
+
 public class GCPPhenotype implements Phenotype
 {
-	public Class<T extends Gene> map(int index)
-	{
-
+	@Override
+	public Class<? extends Gene<?>> map(int index) {
+		return GCPGene.class;
 	}
 }

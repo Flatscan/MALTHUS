@@ -9,17 +9,19 @@ package malthus.GCP;
  * 							-Write an enum DEFAULT class for testing constants
  *
  */
-import java.util.BitSet;
-import java.util.Vector;
 
 import malthus.Individual;
-import malthus.util.Map;
-import malthus.util.Random;
+
 
 public class GCPIndividual extends Individual
 {
+	public GCPIndividual() throws ClassNotFoundException {
+		super();
+	}
+
 	protected double calcFitness()
 	{
 		// Waiting to be implemented
+		return 0.0;
 	}
 }

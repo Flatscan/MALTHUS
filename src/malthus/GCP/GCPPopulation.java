@@ -1,10 +1,10 @@
 package malthus.GCP;
 
-import malthus.util.Sort;
+import malthus.Individual;
 import malthus.Population;
-import malthus.util.Random;
 import malthus.GCP.GCPIndividual;
 
+import java.util.Random;
 
 /**
  * @author MalcolmRoss
@@ -12,15 +12,17 @@ import malthus.GCP.GCPIndividual;
  * @version 0.0
  *
  */
+
+
 public class GCPPopulation extends Population
 {
-	protected  int selectIndividuals( )
+	protected int[] selectIndividuals( )
 	{
-		Individual[] selected;
+		int[] selected;
 
-		selected = new Individual[this.generation.length / 2];
+		selected = new int[this.generation.length / 2];
 		for(int i = 0; i < selected.length; i++)
-			selected[i] = this.generation[i];
+			selected[i] = i;
 
 		return selected;
 	}		

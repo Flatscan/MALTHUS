@@ -1,6 +1,5 @@
 package malthus;
 
-import malthus.util.Random.Random;
 import malthus.util.ReflectiveUtils;
 import malthus.util.Sort;
 
@@ -21,9 +20,7 @@ public abstract class Population
 	protected Individual[] generation;
 
 	protected double populationFitness;
-	@SuppressWarnings("unused")
 	protected double mostFit;
-	@SuppressWarnings("unused")
 	protected double leastFit;
 
 	
@@ -50,11 +47,11 @@ public abstract class Population
 		this.generation = new Individual[size];
 
 		// Generate New Population
-		Individual[] selected = previousPopulation.selectIndividuals();
+		int[] selected = previousPopulation.selectIndividuals();
 		for(int i = 0 ; i < this.generation.length; i++)
 		{
 			Class<?> parameterTypes[] = {Individual.class, Individual.class};
-			Object parameters[] = {selected[selectParent()], selected[selectParent()]};
+			Object parameters[] = {this.generation[selected[selectParent()]], this.generation[selected[selectParent()]]};
 			
 			generation[i] = ReflectiveUtils.newInstance(individualImpl, parameterTypes, parameters);
 		}
@@ -92,7 +89,17 @@ public abstract class Population
 	}
 
 
-	protected abstract Individual[] selectIndividuals( );
+	/**
+	 * Selects individuals within the population and returns the indices
+	 * @return
+	 */
+	protected abstract int[] selectIndividuals( );
+	
+	
+	/**
+	 * Select a random individual within the selected pool
+	 * @return
+	 */
 	protected abstract int selectParent( );
 	
 

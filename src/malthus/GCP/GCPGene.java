@@ -1,4 +1,8 @@
-package malthus;
+package malthus.GCP;
+
+import malthus.Gene;
+
+import java.util.Random;
 
 /**
  * @author MalcolmRoss
@@ -18,14 +22,14 @@ public class GCPGene extends Gene<Integer>
 	}
 
 	@Override
-	protected void randomize()
+	protected Integer randomize()
 	{
 		Random rand = new Random();
 		return rand.nextInt(max_value);
 	}
 
 
-	public static setMax(int newMax)
+	public static void setMax(int newMax)
 	{
 		max_value = newMax;
 	}
