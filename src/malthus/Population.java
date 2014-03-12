@@ -1,6 +1,7 @@
 package malthus;
 
-import malthus.util.Random;
+import malthus.util.Random.Random;
+import malthus.util.ReflectiveUtils;
 import malthus.util.Sort;
 
 /**
@@ -14,6 +15,8 @@ import malthus.util.Sort;
 public abstract class Population
 {
 	protected Configuration conf = new Configuration();
+	protected final Class<Individual> individualImpl = this.conf.getClass("individual", Individual.class);;
+
 
 	protected Individual[] generation;
 
@@ -26,13 +29,12 @@ public abstract class Population
 	
 	public Population( )
 	{
-		this.conf = new Configuration();
-
 		// Initilize Population
 		int size = (Integer) this.conf.getInt("population_size");
-		this.generation = new Individual[this.size];
+		
+		this.generation = new Individual[size];
 		for(int i = 0; i < this.generation.length; i++)
-			this.generation[i] = new Individual();
+			this.generation[i] = ReflectiveUtils.newInstance(individualImpl);
 
 		// Subject to changes for a better sorting algorithm
 		Sort.heap(generation);
@@ -43,16 +45,19 @@ public abstract class Population
 
 	public Population(Population previousPopulation) 
 	{
-		this.conf = new Configuration;
-
 		// Initilize Population
 		int size = this.conf.getInt("population_size");
-		this.generation = new Individual[this.size];
+		this.generation = new Individual[size];
 
 		// Generate New Population
 		Individual[] selected = previousPopulation.selectIndividuals();
 		for(int i = 0 ; i < this.generation.length; i++)
-			generation[i] = new Individual(selected[selectParent()], selected[selectParent()]);
+		{
+			Class<?> parameterTypes[] = {Individual.class, Individual.class};
+			Object parameters[] = {selected[selectParent()], selected[selectParent()]};
+			
+			generation[i] = ReflectiveUtils.newInstance(individualImpl, parameterTypes, parameters);
+		}
 		
 		// Subject to changes for a better sorting algorithm
 		Sort.heap(generation);

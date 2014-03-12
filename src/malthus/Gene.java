@@ -13,7 +13,7 @@ public abstract class Gene<T extends Comparable<T>>
 	private T data;
 
 	public Gene() {
-		this(randomize());	
+		this.data = randomize();	
 	}
 
 
@@ -29,6 +29,12 @@ public abstract class Gene<T extends Comparable<T>>
 
 	public T get() {
 		return this.data;
+	}
+	
+	
+	public Gene<T> clone()
+	{
+		return new Gene<T>(this.data);
 	}
 
 

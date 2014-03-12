@@ -1,4 +1,5 @@
 package malthus;
+
 /**
  * @author MalcolmRoss
  * @author HaoNguyen
@@ -7,6 +8,10 @@ package malthus;
  */
 
 import java.util.Vector;
+
+import malthus.util.ReflectiveUtils;
+import malthus.util.Random.Random;
+
 
 public abstract class Individual
 {
@@ -18,7 +23,7 @@ public abstract class Individual
  * 
  * @see #phenotype
  */
-	protected Vector<Gene> genotype;
+	protected Vector<Gene<?>> genotype;
 
 
 /**
@@ -47,7 +52,7 @@ public abstract class Individual
  */
 	public Individual( Individual i )
 	{
-		genotype = i.genotype.clone();
+		genotype = new Vector<Gene<?>>(i.genotype);
 		fitness = i.fitness;
 		individualMutationRate = i.individualMutationRate;
 	}
@@ -61,23 +66,24 @@ public abstract class Individual
  * 
  * @param size length of the solution string.
  * @param r Random object used by the Population. 
+ * @throws ClassNotFoundException 
  */
-	public Individual( )
+	public Individual( ) throws ClassNotFoundException
 	{
 		Phenotype phenotype = this.conf.newInstance("phenotype", Phenotype.class);
 		int size = this.conf.getInt("gene_size");
 		
 		// Randomize genotype
-		this.genotype = new Vector<Gene>( size );
+		this.genotype = new Vector<Gene<?>>( size );
 		for( int i = 0; i < size; i++ )
 		{
-			Gene gene = phenotype.get(i).getConstructor().newInstance();
+			Gene<?> gene = ReflectiveUtils.newInstance(phenotype.map(i));
 			this.genotype.setElementAt(gene, i);
 		}
 
 		
 		//Calculate fitness
-		this.fitness = calFitness();
+		this.fitness = this.calcFitness();
 	}
 	
 	
@@ -90,11 +96,12 @@ public abstract class Individual
  * @param p1 parent providing the leading genotype of the child.
  * @param p2  parent providing the tail genotype of the child. 
  * @param random Random object used by the population.
+ * @throws ClassNotFoundException 
  * @see #crossover(Individual, Random)
  * @see #calcFitness()
  * @see #mutate()
  */
-	public Individual( Individual p1, Individual p2)
+	public Individual( Individual p1, Individual p2) throws ClassNotFoundException
 	{
 		genotype = p1.crossover(p2);
 		fitness = calcFitness();
@@ -112,12 +119,13 @@ public abstract class Individual
  * @param p2
  * @param random
  * @return Vector<Gene> newGenotype
+ * @throws ClassNotFoundException 
  */
-	protected Vector<Gene> crossover( Individual p2)
+	protected Vector<Gene<?>> crossover( Individual p2) throws ClassNotFoundException
 	{
 		Random random = this.conf.newInstance("random", Random.class);
 
-		Vector<Gene> newGenotype = new Vector<Gene>( genotype.size() );
+		Vector<Gene<?>> newGenotype = new Vector<Gene<?>>( genotype.size() );
 		int crossPnt = (int) Math.floor( random.nextFloat() * genotype.size() ); 
 		
 		for( int i=0; i < crossPnt ; i++ )
@@ -132,20 +140,21 @@ public abstract class Individual
 /**
  * Randomly changes the value of a particular Gene less
  * than or equal to the geneMax.
+ * @throws ClassNotFoundException 
  * 
  *  @see #geneMax
  */
 	@SuppressWarnings("unused")
-	protected void mutate( )
+	protected void mutate( ) throws ClassNotFoundException
 	{
 		for( int i=0; i < this.individualMutationRate; i++ )
 		{
 			Random random = this.conf.newInstance("random", Random.class);
-			Phenotype phenotype = this.conf.newInstance("phenotype");
+			Phenotype phenotype = this.conf.newInstance("phenotype", Phenotype.class);
 
 			// Randomize a gene
 			int mutePnt = (int) Math.floor( random.nextFloat() * genotype.size() );
-			Gene gene = phenotype.get(i).getConstructor().newInstance();
+			Gene<?> gene = ReflectiveUtils.newInstance(phenotype.map(i));
 			genotype.set( mutePnt, gene);
 		}
 	}

@@ -1,4 +1,6 @@
+package malthus;
+
 public interface Phenotype
 {
-	public Class<T extends Gene> map(int index);
+	public Class<Gene<?>> map(int index);
 }

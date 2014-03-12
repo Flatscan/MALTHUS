@@ -1,3 +1,5 @@
+package malthus;
+
 import java.io.FileInputStream;
 import java.util.Map;
 import java.util.HashMap;
@@ -18,7 +20,6 @@ import org.w3c.dom.NodeList;
 public class Configuration
 {
 	private static final String CONFIGURATION_FILENAME = "DefaultConfiguration.xml";
-	private static final Class<?>[] EMPTY_ARRAY = new Class[]{};
 
 
 	/* Multithreading Purpose */
@@ -166,6 +167,13 @@ public class Configuration
 
 		return clazz;
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public <T> Class<T> getClass(String name, Class<T> xFace)
+	{
+		return (Class<T>) this.getClass(name);
+	}
 
 
 	public void set(String name, String value)
@@ -222,19 +230,6 @@ public class Configuration
 		if(cl == null)
 			throw new ClassNotFoundException();
 
-		T ret = null;
-		try
-		{
-			Constructor<?> constructor = cl.getDeclaredConstructor(EMPTY_ARRAY);	
-			constructor.setAccessible(true);
-			ret = (T) constructor.newInstance();
-		}
-		catch(Exception e)
-		{
-			// TODO: Use logging engine instead
-			e.printStackTrace();
-		}
-
-		return ret;
+		return (T) ReflectiveUtils.newInstance(cl);
 	}
 }
