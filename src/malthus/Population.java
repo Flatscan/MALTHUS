@@ -13,9 +13,7 @@ import malthus.util.Sort;
 
 public abstract class Population
 {
-	static final float MUTATION_RATE_DEFAULT = 0.1f;
-
-	protected Configuration conf;
+	protected Configuration conf = new Configuration();
 
 	protected Individual[] generation;
 
@@ -25,14 +23,13 @@ public abstract class Population
 	@SuppressWarnings("unused")
 	protected double leastFit;
 
-	float mutationRate;
 	
 	public Population( )
 	{
 		this.conf = new Configuration();
 
 		// Initilize Population
-		int size = (Integer) this.conf.get("population_size");
+		int size = (Integer) this.conf.getInt("population_size");
 		this.generation = new Individual[this.size];
 		for(int i = 0; i < this.generation.length; i++)
 			this.generation[i] = new Individual();
@@ -49,7 +46,7 @@ public abstract class Population
 		this.conf = new Configuration;
 
 		// Initilize Population
-		int size = (Integer) this.conf.get("population_size");
+		int size = this.conf.getInt("population_size");
 		this.generation = new Individual[this.size];
 
 		// Generate New Population

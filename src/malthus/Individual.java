@@ -10,7 +10,7 @@ import java.util.Vector;
 
 public abstract class Individual
 {
-	protected Configuration conf;
+	protected Configuration conf = new Configuration();
 
 /**
  * A representation of the users data set/solution space as a Vector of Genes,
@@ -47,8 +47,6 @@ public abstract class Individual
  */
 	public Individual( Individual i )
 	{
-		this.conf = new Configuration();
-
 		genotype = i.genotype.clone();
 		fitness = i.fitness;
 		individualMutationRate = i.individualMutationRate;
@@ -66,10 +64,8 @@ public abstract class Individual
  */
 	public Individual( )
 	{
-		this.conf = new Configuration();
-
-		Map<Integer, Class<? extends Gene>> phenotype = (Map<Integer, Class<? extends Gene>>) this.conf.get("phenotype");
-		int size = (Integer) this.conf.get("gene_size");
+		Phenotype phenotype = this.conf.newInstance("phenotype", Phenotype.class);
+		int size = this.conf.getInt("gene_size");
 		
 		// Randomize genotype
 		this.genotype = new Vector<Gene>( size );
@@ -100,8 +96,6 @@ public abstract class Individual
  */
 	public Individual( Individual p1, Individual p2)
 	{
-		this.conf = new Configuration();
-
 		genotype = p1.crossover(p2);
 		fitness = calcFitness();
 
@@ -121,7 +115,7 @@ public abstract class Individual
  */
 	protected Vector<Gene> crossover( Individual p2)
 	{
-		Random random = (Random) this.conf.get("random");
+		Random random = this.conf.newInstance("random", Random.class);
 
 		Vector<Gene> newGenotype = new Vector<Gene>( genotype.size() );
 		int crossPnt = (int) Math.floor( random.nextFloat() * genotype.size() ); 
@@ -146,8 +140,8 @@ public abstract class Individual
 	{
 		for( int i=0; i < this.individualMutationRate; i++ )
 		{
-			Random random = (Random) this.conf.get("random");
-			Map<Integer, Class<? extends Gene>> phenotype = this.conf.get("phenotype");
+			Random random = this.conf.newInstance("random", Random.class);
+			Phenotype phenotype = this.conf.newInstance("phenotype");
 
 			// Randomize a gene
 			int mutePnt = (int) Math.floor( random.nextFloat() * genotype.size() );

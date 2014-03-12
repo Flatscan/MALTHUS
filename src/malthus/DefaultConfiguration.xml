@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<configuration>
+	<property name="random">
+		malthus.util.Random.DefaultRandom
+	</property>
+
+	<property name="population_size">
+		100
+	</property>
+
+	<property name="gene_size">
+		10
+	</property>
+
+	<property name="phenotype">
+		malthus.GCP.GCPPhenotype
+	</property>
+</configuration>

@@ -8,12 +8,12 @@ package malthus;
  */
 public abstract class Gene<T extends Comparable<T>>
 {
-	protected Configuration conf;
+	protected Configuration conf = new Configuration();
 
 	private T data;
 
 	public Gene() {
-		this.data = randomize();	
+		this(randomize());	
 	}
 
 

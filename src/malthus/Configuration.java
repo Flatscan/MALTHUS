@@ -25,6 +25,8 @@ public class Configuration
 	private ClassLoader classLoader;
 	{
 		classLoader = Thread.currentThread().getContextClassLoader();
+		if(classLoader == null)
+			classLoader = Configuration.class.getClassLoader();
 	}
 
 
@@ -32,38 +34,33 @@ public class Configuration
 		WeakHashMap<ClassLoader, Map< String, WeakReference<Class<?>> >>();
 
 
-	private final Map<String, String> properties = new HashMap<String, String>();
+	private static final Map<String, String> defaultProperties = parse(CONFIGURATION_FILENAME);
+
+
+	private boolean usingDefault;
+	private final Map<String, String> properties;
 
 	
 	public Configuration()
 	{
-		this(true);
-	}
-
-
-	public Configuration(boolean usingDefault) 
-	{
-		this(CONFIGURATION_FILENAME, usingDefault);	
+		this.usingDefault = true;
+		this.properties = null;
 	}
 
 
 	public Configuration(String fileName)
 	{
-		this(fileName, true);
+		this.properties = parse(fileName);
+		this.usingDefault = false;
 	}
 
 
-	public Configuration(String fileName, boolean usingDefault)
-	{
-		this.parse(fileName);	
-	}
-
-
-	private void parse(String fileName)
+	private static Map<String, String> parse(String fileName)
 	{
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
 
+		Map<String, String> map = new HashMap<String, String>();
 		try
 		{
 			builder = builderFactory.newDocumentBuilder();
@@ -72,6 +69,7 @@ public class Configuration
 		{
 			// TODO: use logging engine instead
 			e.printStackTrace();
+			return null;
 		}
 
 		
@@ -87,23 +85,27 @@ public class Configuration
 		
 				String name = node.getAttributes().getNamedItem("name").getNodeValue()
 								.trim().toLowerCase();
-				String value = node.getTextContent()
-								.trim();
+				String value = node.getTextContent().trim();
 
-				this.properties.put(name, value);
+				map.put(name, value);
 			}
 		}
 		catch(Exception e)
 		{
 			// TODO: use logging engine instead
 			e.printStackTrace();
+			return null;
 		}
+
+
+		return map;
 	}
 
 
-	public String get(String name)
+	private String get(String name)
 	{
-		return this.properties.get(name);
+		return this.usingDefault ? 
+			Configuration.defaultProperties.get(name) : this.properties.get(name);
 	}
 
 
@@ -166,6 +168,52 @@ public class Configuration
 	}
 
 
+	public void set(String name, String value)
+	{
+		Map<String, String> setMap = (this.usingDefault) ? this.properties : Configuration.defaultProperties;
+		setMap.put(name.trim().toLowerCase(), value.trim());
+	}
+
+
+	public void setInt(String name, int value)
+	{
+		this.set(name, value + "");
+	}
+
+
+	public void setDouble(String name, double value)
+	{
+		this.set(name, value + "");
+	}
+
+
+	public void setClass(Class<?> clazz)
+	{
+		this.setClass(clazz.getName(), clazz);
+	}
+
+
+	public void setClass(String name, Class<?> clazz)
+	{
+		this.set(name, clazz.getName());	
+	}
+
+
+	public void setClass(String className)
+	{
+		try
+		{
+			Class<?> clazz = Class.forName(className, true, classLoader);
+			this.setClass(clazz);
+		}
+		catch(ClassNotFoundException e)
+		{
+			// TODO: Use logging engine instead
+			e.printStackTrace();
+		}
+	}
+
+
 	@SuppressWarnings("unchecked")
 	public <T> T newInstance(String name, Class<T> xface)
 		throws ClassNotFoundException
@@ -189,4 +237,4 @@ public class Configuration
 
 		return ret;
 	}
- }
+}
