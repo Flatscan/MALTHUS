@@ -1,8 +1,6 @@
 package malthus.GCP;
 
-import malthus.Individual;
 import malthus.Population;
-import malthus.GCP.GCPIndividual;
 
 import java.util.Random;
 

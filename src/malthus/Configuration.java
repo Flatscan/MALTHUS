@@ -5,14 +5,14 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.WeakHashMap;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Constructor;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import malthus.util.ReflectiveUtils;
+
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
