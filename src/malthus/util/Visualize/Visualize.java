@@ -1,4 +1,4 @@
-package malthus.util;
+package malthus.util.Visualize;
 /**
  * @author MalcolmRoss
  * @version 0.0

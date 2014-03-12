@@ -1,4 +1,4 @@
-package malthus.util;
+package malthus.util.Random;
 
 
 public interface Random {
@@ -6,5 +6,5 @@ public interface Random {
 	public double nextDouble();
 	public float nextFloat();
 
-	public void setSeed();
+	public void setSeed(long seed);
 }

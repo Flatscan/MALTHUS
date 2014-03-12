@@ -15,8 +15,26 @@ import malthus.util.Random.Random;
 
 public abstract class Individual
 {
-	protected Configuration conf = new Configuration();
+	protected static Phenotype phenotype;
+	protected static Random random;
+	static 
+	{
+		Configuration conf = new Configuration();
+		try 
+		{
+			phenotype = conf.newInstance("phenotype", Phenotype.class);
+			random = conf.newInstance("random", Random.class);
+			
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+	
 
+	protected Configuration conf = new Configuration();
+	
 /**
  * A representation of the users data set/solution space as a Vector of Genes,
  * an interface that the user will have to implement for their particular needs.
@@ -70,7 +88,6 @@ public abstract class Individual
  */
 	public Individual( ) throws ClassNotFoundException
 	{
-		Phenotype phenotype = this.conf.newInstance("phenotype", Phenotype.class);
 		int size = this.conf.getInt("gene_size");
 		
 		// Randomize genotype
@@ -101,7 +118,7 @@ public abstract class Individual
  * @see #calcFitness()
  * @see #mutate()
  */
-	public Individual( Individual p1, Individual p2) throws ClassNotFoundException
+	public Individual( Individual p1, Individual p2)
 	{
 		genotype = p1.crossover(p2);
 		fitness = calcFitness();
@@ -121,17 +138,27 @@ public abstract class Individual
  * @return Vector<Gene> newGenotype
  * @throws ClassNotFoundException 
  */
-	protected Vector<Gene<?>> crossover( Individual p2) throws ClassNotFoundException
+	protected Vector<Gene<?>> crossover( Individual p2)
 	{
-		Random random = this.conf.newInstance("random", Random.class);
-
 		Vector<Gene<?>> newGenotype = new Vector<Gene<?>>( genotype.size() );
 		int crossPnt = (int) Math.floor( random.nextFloat() * genotype.size() ); 
 		
+		
 		for( int i=0; i < crossPnt ; i++ )
-			newGenotype.setElementAt( this.genotype.elementAt( i ).clone(), i);
+		{
+			Class<?> types[] = {phenotype.map(i)};
+			Object params[] = {this.genotype.elementAt( i )};
+			
+			newGenotype.setElementAt( ReflectiveUtils.newInstance(phenotype.map(i), types, params), i);
+		}
+		
 		for( int i=crossPnt; i < genotype.size() ; i++ )
-			newGenotype.setElementAt( p2.genotype.elementAt( i ).clone(), i);
+		{
+			Class<?> types[] = {phenotype.map(i)};
+			Object params[] = {this.genotype.elementAt( i )};
+			
+			newGenotype.setElementAt( ReflectiveUtils.newInstance(phenotype.map(i), types, params), i);
+		}
 		
 		return newGenotype;
 	}
@@ -145,13 +172,10 @@ public abstract class Individual
  *  @see #geneMax
  */
 	@SuppressWarnings("unused")
-	protected void mutate( ) throws ClassNotFoundException
+	protected void mutate( )
 	{
 		for( int i=0; i < this.individualMutationRate; i++ )
 		{
-			Random random = this.conf.newInstance("random", Random.class);
-			Phenotype phenotype = this.conf.newInstance("phenotype", Phenotype.class);
-
 			// Randomize a gene
 			int mutePnt = (int) Math.floor( random.nextFloat() * genotype.size() );
 			Gene<?> gene = ReflectiveUtils.newInstance(phenotype.map(i));

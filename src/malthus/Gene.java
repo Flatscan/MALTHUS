@@ -20,6 +20,12 @@ public abstract class Gene<T extends Comparable<T>>
 	public Gene(T data) {
 		this.data = data;
 	}
+	
+	
+	public Gene(Gene<T> gene)
+	{
+		this.data = gene.get();
+	}
 
 
 	public int compareTo(Gene<T> gene) {
@@ -29,12 +35,6 @@ public abstract class Gene<T extends Comparable<T>>
 
 	public T get() {
 		return this.data;
-	}
-	
-	
-	public Gene<T> clone()
-	{
-		return new Gene<T>(this.data);
 	}
 
 
