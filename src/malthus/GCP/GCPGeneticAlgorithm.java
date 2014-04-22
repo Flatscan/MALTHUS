@@ -19,7 +19,7 @@ public class GCPGeneticAlgorithm extends GeneticAlgorithm
 		
 		for( int i=0; i<pop1.getGeneration().length; i++ )
 		{
-			(pop1.getGeneration()[i]).getFitness();
+			System.out.println(pop1.getGeneration()[i].getFitness());
 		}
 	}
 }

@@ -21,21 +21,23 @@ public class GCPIndividual extends Individual
 		super();
 	}
 
+	
 	protected double calcFitness()
 	{
-		double invalidColoring = 0;
+		double invalidColoring = 0.0;
 		
-		for(int i=0; i<genotype.size(); i++)
+		for(int i=0; i<genotype.length; i++)
 		{
-			invalidColoring += checkColoring( genotype.elementAt( i ) );
+			invalidColoring += checkColoring( genotype[i] );
 		}
 			
-		return invalidColoring / genotype.size();
+		return invalidColoring / genotype.length;
 	}
+	
 
 	private int checkColoring(Gene<?> elementAt)
 	{
-		return 1;
+		return 2;
 		
 	}
 }

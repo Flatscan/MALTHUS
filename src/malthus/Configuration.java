@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
 
 public class Configuration
 {
-	private static final String CONFIGURATION_FILENAME = "/Users/MalcolmRoss/Programs/SOS/MALTHUS/src/malthus/DefaultConfiguration.xml";
+	private static final String CONFIGURATION_FILENAME = "/home/hnguyen/Documents/MALTHUS/src/malthus/DefaultConfiguration.xml";
 
 
 	/* Multithreading Purpose */

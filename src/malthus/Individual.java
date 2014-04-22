@@ -7,7 +7,8 @@ package malthus;
  * 
  */
 
-import java.util.Vector;
+import java.util.Arrays;
+
 import malthus.util.ReflectiveUtils;
 import malthus.util.Random.Random;
 
@@ -41,7 +42,7 @@ public abstract class Individual
  * 
  * @see #phenotype
  */
-	protected Vector<Gene<?>> genotype;
+	protected Gene<?>[] genotype;
 
 
 /**
@@ -70,7 +71,7 @@ public abstract class Individual
  */
 	public Individual( Individual i )
 	{
-		genotype = new Vector<Gene<?>>(i.genotype);
+		genotype = Arrays.copyOf(i.genotype, i.genotype.length);
 		fitness = i.fitness;
 		individualMutationRate = i.individualMutationRate;
 	}
@@ -91,12 +92,11 @@ public abstract class Individual
 		int size = this.conf.getInt("gene_size");
 		
 		// Randomize genotype
-		this.genotype = new Vector<Gene<?>>( Individual[size] );
-		System.out.println("Size " + this.genotype.size() + ", " + size);
-		for( int i = 0; i < size; i++ )
+		this.genotype = new Gene<?>[size];
+		for( int i = 0; i < this.genotype.length; i++ )
 		{
 			Gene<?> gene = ReflectiveUtils.newInstance(phenotype.map(i));
-			this.genotype.setElementAt(gene, i);
+			this.genotype[i] = gene;
 		}
 
 		
@@ -124,7 +124,7 @@ public abstract class Individual
 		genotype = p1.crossover(p2);
 		fitness = calcFitness();
 
-		individualMutationRate = (int) calculateMutationRate( p1.individualMutationRate, p2.individualMutationRate ) * genotype.size();
+		individualMutationRate = (int) calculateMutationRate( p1.individualMutationRate, p2.individualMutationRate ) * genotype.length;
 	}
 	
 	
@@ -139,26 +139,26 @@ public abstract class Individual
  * @return Vector<Gene> newGenotype
  * @throws ClassNotFoundException 
  */
-	protected Vector<Gene<?>> crossover( Individual p2)
+	protected Gene<?>[] crossover( Individual p2)
 	{
-		Vector<Gene<?>> newGenotype = new Vector<Gene<?>>( genotype.size() );
-		int crossPnt = (int) Math.floor( random.nextFloat() * genotype.size() ); 
+		Gene<?>[] newGenotype = new Gene<?>[this.genotype.length];
+		int crossPnt = (int) Math.floor( random.nextFloat() * this.genotype.length ); 
 		
 		
 		for( int i=0; i < crossPnt ; i++ )
 		{
 			Class<?> types[] = {phenotype.map(i)};
-			Object params[] = {this.genotype.elementAt( i )};
+			Object params[] = {this.genotype[i]};
 			
-			newGenotype.setElementAt( ReflectiveUtils.newInstance(phenotype.map(i), types, params), i);
+			newGenotype[i] = ReflectiveUtils.newInstance(phenotype.map(i), types, params);
 		}
 		
-		for( int i=crossPnt; i < genotype.size() ; i++ )
+		for( int i=crossPnt; i < genotype.length ; i++ )
 		{
 			Class<?> types[] = {phenotype.map(i)};
-			Object params[] = {this.genotype.elementAt( i )};
+			Object params[] = {this.genotype[i]};
 			
-			newGenotype.setElementAt( ReflectiveUtils.newInstance(phenotype.map(i), types, params), i);
+			newGenotype[i] = ReflectiveUtils.newInstance(phenotype.map(i), types, params);
 		}
 		
 		return newGenotype;
@@ -177,9 +177,9 @@ public abstract class Individual
 		for( int i=0; i < this.individualMutationRate; i++ )
 		{
 			// Randomize a gene
-			int mutePnt = (int) Math.floor( random.nextFloat() * genotype.size() );
+			int mutePnt = (int) Math.floor( random.nextFloat() * genotype.length );
 			Gene<?> gene = ReflectiveUtils.newInstance(phenotype.map(i));
-			genotype.set( mutePnt, gene);
+			genotype[mutePnt] = gene;
 		}
 	}
 
