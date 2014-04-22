@@ -71,7 +71,8 @@ public abstract class Population
 		double ave = 0.0;
 
 
-		for(int i = 0; i < this.generation.length; i++) {
+		for(int i = 0; i < this.generation.length; i++) 
+		{
 			// Maximum
 			max = (max < this.generation[i].getFitness()) ? this.generation[i].getFitness() : max;
 			

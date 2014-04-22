@@ -7,8 +7,9 @@ import malthus.Phenotype;
 
 public class GCPPhenotype implements Phenotype
 {
-	@Override
-	public Class<? extends Gene<?>> map(int index) {
+/*	@Override
+	public Class<? extends Gene<?>> map(int index) 
+	{
 		return GCPGene.class;
-	}
+	}*/
 }

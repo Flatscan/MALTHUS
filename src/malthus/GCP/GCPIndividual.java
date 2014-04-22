@@ -15,13 +15,18 @@ import malthus.Individual;
 
 public class GCPIndividual extends Individual
 {
-	public GCPIndividual() throws ClassNotFoundException {
+	public GCPIndividual() throws ClassNotFoundException 
+	{
 		super();
 	}
 
 	protected double calcFitness()
 	{
-		// Waiting to be implemented
+		for(int i=0; i<genotype.size(); i++)
+		{
+			
+		}
+			
 		return 0.0;
 	}
 }

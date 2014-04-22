@@ -8,7 +8,6 @@ package malthus;
  */
 
 import java.util.Vector;
-
 import malthus.util.ReflectiveUtils;
 import malthus.util.Random.Random;
 
@@ -17,6 +16,7 @@ public abstract class Individual
 {
 	protected static Phenotype phenotype;
 	protected static Random random;
+	
 	static 
 	{
 		Configuration conf = new Configuration();
@@ -171,7 +171,6 @@ public abstract class Individual
  * 
  *  @see #geneMax
  */
-	@SuppressWarnings("unused")
 	protected void mutate( )
 	{
 		for( int i=0; i < this.individualMutationRate; i++ )
