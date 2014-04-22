@@ -91,7 +91,8 @@ public abstract class Individual
 		int size = this.conf.getInt("gene_size");
 		
 		// Randomize genotype
-		this.genotype = new Vector<Gene<?>>( size );
+		this.genotype = new Vector<Gene<?>>( Individual[size] );
+		System.out.println("Size " + this.genotype.size() + ", " + size);
 		for( int i = 0; i < size; i++ )
 		{
 			Gene<?> gene = ReflectiveUtils.newInstance(phenotype.map(i));

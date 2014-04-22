@@ -120,4 +120,10 @@ public abstract class Population
 	{
 		return generation.length;
 	}
+	
+	public Individual[] getGeneration()
+	{
+		return generation;
+	}
+
 }

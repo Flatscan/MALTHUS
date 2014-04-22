@@ -16,4 +16,8 @@
 	<property name="phenotype">
 		malthus.GCP.GCPPhenotype
 	</property>
+	
+	<property name="individual">
+		malthus.GCP.GCPIndividual
+	</property>
 </configuration>
