@@ -13,7 +13,8 @@ import java.util.Random;
 
 public class GCPGene extends Gene<Integer>
 {
-	private static int max_value = 200;
+	private static int max_value = 1000;
+	
 
 	@Override
 	public double getValue()

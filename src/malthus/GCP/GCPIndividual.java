@@ -10,34 +10,13 @@ package malthus.GCP;
  *
  */
 
-import malthus.Gene;
 import malthus.Individual;
 
 
 public class GCPIndividual extends Individual
 { 	
-	public GCPIndividual() throws ClassNotFoundException 
-	{
-		super();
-	}
-
-	
 	protected double calcFitness()
 	{
-		double invalidColoring = 0.0;
-		
-		for(int i=0; i<genotype.length; i++)
-		{
-			invalidColoring += checkColoring( genotype[i] );
-		}
-			
-		return invalidColoring / genotype.length;
-	}
-	
-
-	private int checkColoring(Gene<?> elementAt)
-	{
-		return 2;
-		
+		return this.genotype[0].getValue() + this.genotype[1].getValue();
 	}
 }

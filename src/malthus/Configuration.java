@@ -1,10 +1,12 @@
 package malthus;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.WeakHashMap;
 import java.lang.ref.WeakReference;
+import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,7 +22,6 @@ import org.w3c.dom.NodeList;
 public class Configuration
 {
 	private static final String CONFIGURATION_FILENAME = "/home/hnguyen/Documents/MALTHUS/src/malthus/DefaultConfiguration.xml";
-
 
 	/* Multithreading Purpose */
 	private ClassLoader classLoader;
@@ -77,7 +78,7 @@ public class Configuration
 		// Parsing the File
 		try
 		{
-			Document doc = builder.parse(new FileInputStream(fileName));			
+			Document doc = builder.parse(new FileInputStream(new File(fileName)));			
 			NodeList properties = doc.getElementsByTagName("property");
 
 			for(int i = 0; i < properties.getLength(); i++)

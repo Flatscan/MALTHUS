@@ -13,7 +13,7 @@ import java.util.Random;
 
 
 public class GCPPopulation extends Population
-{
+{	
 	protected int[] selectIndividuals( )
 	{
 		int[] selected;

@@ -13,9 +13,8 @@ import malthus.util.Sort;
 
 public abstract class Population
 {
-	protected Configuration conf = new Configuration();
-	protected final Class<Individual> individualImpl = this.conf.getClass("individual", Individual.class);;
-
+	protected static Configuration conf = new Configuration();
+	protected static final Class<Individual> individualImpl = conf.getClass("individual", Individual.class);
 
 	protected Individual[] generation;
 
@@ -23,44 +22,41 @@ public abstract class Population
 	protected double mostFit;
 	protected double leastFit;
 
-	
-	public Population( )
+
+	public Population nextGeneration() 
 	{
-		// Initilize Population
-		int size = (Integer) this.conf.getInt("population_size");
+		Population newPop = factory(false);
 		
-		this.generation = new Individual[size];
-		for(int i = 0; i < this.generation.length; i++)
-			this.generation[i] = ReflectiveUtils.newInstance(individualImpl);
+		// Breeding
+		int size = conf.getInt("population_size");
+		Individual[] childrends = new Individual[size];
 
-		// Subject to changes for a better sorting algorithm
-		Sort.heap(generation);
-
-		calStatistics();
-	}
-
-
-	public Population(Population previousPopulation) 
-	{
-		// Initilize Population
-		int size = this.conf.getInt("population_size");
-		this.generation = new Individual[size];
-
-		// Generate New Population
-		int[] selected = previousPopulation.selectIndividuals();
-		for(int i = 0 ; i < this.generation.length; i++)
+		int[] selected = this.selectIndividuals();
+		for(int i = 0 ; i < childrends.length; i++)
 		{
-			Class<?> parameterTypes[] = {Individual.class, Individual.class};
-			Object parameters[] = {this.generation[selected[selectParent()]], this.generation[selected[selectParent()]]};
-			
-			generation[i] = ReflectiveUtils.newInstance(individualImpl, parameterTypes, parameters);
+			Individual dad = this.generation[ selected[selectParent()] ];
+			Individual mom = this.generation[ selected[selectParent()] ];
+			childrends[i] = dad.reproduce(mom);
 		}
 		
-		// Subject to changes for a better sorting algorithm
-		Sort.heap(generation);
-
-		calStatistics();
-
+		newPop.setIndividuals(childrends);
+		return newPop;
+	}
+	
+	
+	public static Population factory(boolean init) {
+		int size = (Integer) conf.getInt("population_size");
+		Class<Population> clazz = conf.getClass("population", Population.class);
+		
+		Population population = ReflectiveUtils.newInstance(clazz);
+		if(init) {
+			Individual[] generation = new Individual[size];
+			for(int i = 0; i < generation.length; i++)
+				generation[i] = Individual.factory(true);
+			population.setIndividuals(generation);
+		}
+		
+		return population;
 	}
 
 
@@ -121,9 +117,16 @@ public abstract class Population
 		return generation.length;
 	}
 	
-	public Individual[] getGeneration()
+	
+	public Individual[] getIndividuals()
 	{
 		return generation;
 	}
 
+	
+	public void setIndividuals(Individual[] indvs) {
+		this.generation = indvs;
+		Sort.heap(this.generation);
+		this.calStatistics();
+	}
 }

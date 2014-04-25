@@ -17,10 +17,10 @@ public abstract class Individual
 {
 	protected static Phenotype phenotype;
 	protected static Random random;
+	protected static Configuration conf = new Configuration();
 	
 	static 
 	{
-		Configuration conf = new Configuration();
 		try 
 		{
 			phenotype = conf.newInstance("phenotype", Phenotype.class);
@@ -32,9 +32,6 @@ public abstract class Individual
 			e.printStackTrace();
 		}
 	}
-	
-
-	protected Configuration conf = new Configuration();
 	
 /**
  * A representation of the users data set/solution space as a Vector of Genes,
@@ -61,70 +58,27 @@ public abstract class Individual
  *  
  *  @see #mutate()
  */
-	protected int individualMutationRate;
+	protected float individualMutationRate;
 	
 	
-/**
- * A simple copy constructor.
- * 
- * @param i individual to be copied. 
- */
-	public Individual( Individual i )
-	{
-		genotype = Arrays.copyOf(i.genotype, i.genotype.length);
-		fitness = i.fitness;
-		individualMutationRate = i.individualMutationRate;
-	}
-
+	public static Individual factory(boolean init) {
+		int size = conf.getInt("gene_size");
+		Class<Individual> clazz = conf.getClass("individual", Individual.class);
 	
-/**
- * Real "default" constructor, to be used only for initializing the  
- * of the first Population generation by randomly creating Individuals.
- * Ideally, a user will overload this so that they can use a Gene of 
- * their choosing. 
- * 
- * @param size length of the solution string.
- * @param r Random object used by the Population. 
- * @throws ClassNotFoundException 
- */
-	public Individual( ) throws ClassNotFoundException
-	{
-		int size = this.conf.getInt("gene_size");
-		
-		// Randomize genotype
-		this.genotype = new Gene<?>[size];
-		for( int i = 0; i < this.genotype.length; i++ )
-		{
-			Gene<?> gene = ReflectiveUtils.newInstance(phenotype.map(i));
-			this.genotype[i] = gene;
+		Individual newIndv = ReflectiveUtils.newInstance(clazz);
+		if(init) {
+			Gene<?>[] genotype = new Gene<?>[size];
+			for( int i = 0; i < genotype.length; i++ )
+			{
+				Gene<?> gene = ReflectiveUtils.newInstance(phenotype.map(i));				
+				genotype[i] = gene;
+			}
+			
+			newIndv.setGenotype(genotype);
+			newIndv.individualMutationRate = 0.03f;
 		}
-
 		
-		//Calculate fitness
-		this.fitness = this.calcFitness();
-	}
-	
-	
-/**
- * Standard constructor. Takes two parent Individuals and calls crossover() at 
- * a random Gene (rounded down) along the genotype. It then calculates the fitness 
- * based on the population  testFunction() and then calculates the child's individual 
- * mutation rate as the average of its parents.
- * 
- * @param p1 parent providing the leading genotype of the child.
- * @param p2  parent providing the tail genotype of the child. 
- * @param random Random object used by the population.
- * @throws ClassNotFoundException 
- * @see #crossover(Individual, Random)
- * @see #calcFitness()
- * @see #mutate()
- */
-	public Individual( Individual p1, Individual p2)
-	{
-		genotype = p1.crossover(p2);
-		fitness = calcFitness();
-
-		individualMutationRate = (int) calculateMutationRate( p1.individualMutationRate, p2.individualMutationRate ) * genotype.length;
+		return newIndv;
 	}
 	
 	
@@ -146,19 +100,13 @@ public abstract class Individual
 		
 		
 		for( int i=0; i < crossPnt ; i++ )
-		{
-			Class<?> types[] = {phenotype.map(i)};
-			Object params[] = {this.genotype[i]};
-			
-			newGenotype[i] = ReflectiveUtils.newInstance(phenotype.map(i), types, params);
+		{	
+			newGenotype[i] = this.genotype[i].clone();
 		}
 		
 		for( int i=crossPnt; i < genotype.length ; i++ )
 		{
-			Class<?> types[] = {phenotype.map(i)};
-			Object params[] = {this.genotype[i]};
-			
-			newGenotype[i] = ReflectiveUtils.newInstance(phenotype.map(i), types, params);
+			newGenotype[i] = p2.genotype[i].clone();
 		}
 		
 		return newGenotype;
@@ -198,6 +146,24 @@ public abstract class Individual
 	{
 		return ( m1 + m2 ) / 2;
 	}
+	
+	
+	public Individual clone() {
+		Individual newIndv = factory(false);
+		newIndv.setGenotype(Arrays.copyOf(this.genotype, this.genotype.length));
+		newIndv.individualMutationRate = this.individualMutationRate;
+		return newIndv;
+	}
+	
+	
+	public Individual reproduce(Individual mate) {
+		Individual child = factory(false);
+		Gene<?>[] genotype = this.crossover(mate);
+		child.setGenotype(genotype);
+		child.individualMutationRate = 0.03f;
+		
+		return child;
+	}
 
 
 /**
@@ -217,4 +183,9 @@ public abstract class Individual
 		return this.fitness;
 	}
 
+	
+	public void setGenotype(Gene<?>[] genotype) {
+		this.genotype = genotype;
+		this.fitness = this.calcFitness();
+	}
 }

@@ -9,12 +9,14 @@
 		100
 	</property>
 
-	<property name="gene_size">
-		10
-	</property>
+	<property name="gene_size">2</property>
 
 	<property name="phenotype">
 		malthus.GCP.GCPPhenotype
+	</property>
+	
+	<property name="population">
+		malthus.GCP.GCPPopulation
 	</property>
 	
 	<property name="individual">
