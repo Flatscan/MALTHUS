@@ -17,6 +17,9 @@ public class GCPIndividual extends Individual
 { 	
 	protected double calcFitness()
 	{
-		return this.genotype[0].getValue() + this.genotype[1].getValue();
+		double score = 0.0;
+		for(int i = 0; i < this.getGenotype().length; i++)
+			score = score + ( Math.pow(2.0, i * this.getGeneAt(i).getValue()) );
+		return score;
 	}
 }

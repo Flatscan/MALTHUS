@@ -19,8 +19,8 @@ public class GCPPopulation extends Population
 		int[] selected;
 
 		selected = new int[this.generation.length / 2];
-		for(int i = 0; i < selected.length; i++)
-			selected[i] = i;
+		for(int i = 0, j = this.generation.length - 1; i < selected.length; i++)
+			selected[i] = j--;
 
 		return selected;
 	}		

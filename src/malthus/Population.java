@@ -129,4 +129,9 @@ public abstract class Population
 		Sort.heap(this.generation);
 		this.calStatistics();
 	}
+	
+	
+	public Individual getFitest() {
+		return this.generation[ this.generation.length - 1 ];
+	}
 }

@@ -122,11 +122,10 @@ public abstract class Individual
  */
 	protected void mutate( )
 	{
-		for( int i=0; i < this.individualMutationRate; i++ )
-		{
-			// Randomize a gene
-			int mutePnt = (int) Math.floor( random.nextFloat() * genotype.length );
-			Gene<?> gene = ReflectiveUtils.newInstance(phenotype.map(i));
+		// Mutating Decision
+		if(random.nextFloat() < this.individualMutationRate) {
+			int mutePnt = (int) Math.floor( random.nextFloat() * this.genotype.length );
+			Gene<?> gene = ReflectiveUtils.newInstance(phenotype.map(mutePnt));
 			genotype[mutePnt] = gene;
 		}
 	}
@@ -162,6 +161,9 @@ public abstract class Individual
 		child.setGenotype(genotype);
 		child.individualMutationRate = 0.03f;
 		
+		// Mutate
+		child.mutate();
+		
 		return child;
 	}
 
@@ -187,5 +189,15 @@ public abstract class Individual
 	public void setGenotype(Gene<?>[] genotype) {
 		this.genotype = genotype;
 		this.fitness = this.calcFitness();
+	}
+	
+	
+	public Gene<?>[] getGenotype() {
+		return this.genotype;
+	}
+	
+	
+	public Gene<?> getGeneAt(int index) {
+		return this.genotype[index];
 	}
 }

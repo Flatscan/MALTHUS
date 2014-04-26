@@ -1,6 +1,5 @@
 package malthus.GCP;
 
-import malthus.GeneticAlgorithm;
 import malthus.Population;
 
 
@@ -11,15 +10,15 @@ import malthus.Population;
  *
  */
 
-public class GCPGeneticAlgorithm extends GeneticAlgorithm
+public class GCPGeneticAlgorithm
 {	
-	
 	public static void main(String[] args)
 	{ 
 		Population pop1 = Population.factory(true);
 		for(int i = 0; i < 100; i++) {
 			pop1 = pop1.nextGeneration();
-			System.out.println(pop1.getMeanPopulationFitness() + " " + pop1.getPopulationFitness());
+			System.out.print("Score = " + pop1.getMeanPopulationFitness() + " ");
+			System.out.println("Max = " + pop1.getFitest().getFitness() + " ");
 		}
 	}
 }
