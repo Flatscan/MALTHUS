@@ -7,6 +7,7 @@ import java.io.IOException;
 
 public class Graph
 {
+	int numNodes;
 	private int[][] edgeList;
 	
 	public Graph( )
@@ -17,14 +18,14 @@ public class Graph
 	public Graph( String graphFilePath ) throws IOException
 	{
 		int size = getGraphSize( graphFilePath );
-		edgeList = getEdges( graphFilePath, size );
+		edgeList = setEdges( graphFilePath, size );
 	}
 	
 	public int getGraphSize( String fp ) throws IOException
 	{
 		BufferedReader br = new BufferedReader( new FileReader( fp ) );
-		@SuppressWarnings("unused")
 		String line = br.readLine();
+		numNodes = Integer.parseInt( line );
 		int size = 0;
 		while( (line = br.readLine()) != null )
 			size++;
@@ -33,7 +34,7 @@ public class Graph
 		return size;
 	}
 	
-	public int[][] getEdges( String fp, int s ) throws IOException
+	public int[][] setEdges( String fp, int s ) throws IOException
 	{
 		BufferedReader br = new BufferedReader( new FileReader( fp ) );
 		String line = br.readLine();
@@ -53,6 +54,15 @@ public class Graph
 		}
 		br.close();
 		return edges;
+	}
+	
+	public int[][] getEdges()
+	{
+		return edgeList;
+	}
+	public int getNumNodes()
+	{
+		return numNodes;
 	}
 	
 	public String toString( int[] coloring )

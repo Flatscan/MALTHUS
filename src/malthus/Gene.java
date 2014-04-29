@@ -10,7 +10,7 @@ import malthus.util.ReflectiveUtils;
  */
 public abstract class Gene<T extends Comparable<T>>
 {
-	protected static Configuration conf = new Configuration();
+//	protected static Configuration conf = new Configuration();
 
 	private T data;
 	
@@ -49,4 +49,9 @@ public abstract class Gene<T extends Comparable<T>>
 
 	protected abstract T randomize();
 	public abstract double getValue();
+
+	protected Integer randomize( int max )
+	{ 
+		return -1;
+	}
 }

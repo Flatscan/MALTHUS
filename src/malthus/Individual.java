@@ -17,9 +17,9 @@ public abstract class Individual
 {
 	protected static Phenotype phenotype;
 	protected static Random random;
-	protected static Configuration conf = new Configuration();
+//	protected static Configuration conf = new Configuration();
 	
-	static 
+/*	static 
 	{
 		try 
 		{
@@ -31,7 +31,7 @@ public abstract class Individual
 		{
 			e.printStackTrace();
 		}
-	}
+	} */
 	
 /**
  * A representation of the users data set/solution space as a Vector of Genes,
@@ -61,7 +61,7 @@ public abstract class Individual
 	protected float individualMutationRate;
 	
 	
-	public static Individual factory(boolean init) {
+/*	public static Individual factory(boolean init) {
 		int size = conf.getInt("gene_size");
 		Class<Individual> clazz = conf.getClass("individual", Individual.class);
 	
@@ -79,7 +79,7 @@ public abstract class Individual
 		}
 		
 		return newIndv;
-	}
+	}  */
 	
 	
 /**
@@ -147,15 +147,15 @@ public abstract class Individual
 	}
 	
 	
-	public Individual clone() {
+/*	public Individual clone() {
 		Individual newIndv = factory(false);
 		newIndv.setGenotype(Arrays.copyOf(this.genotype, this.genotype.length));
 		newIndv.individualMutationRate = this.individualMutationRate;
 		return newIndv;
-	}
+	} */
 	
 	
-	public Individual reproduce(Individual mate) {
+/*	public Individual reproduce(Individual mate) {
 		Individual child = factory(false);
 		Gene<?>[] genotype = this.crossover(mate);
 		child.setGenotype(genotype);
@@ -165,7 +165,7 @@ public abstract class Individual
 		child.mutate();
 		
 		return child;
-	}
+	} */
 
 
 /**
