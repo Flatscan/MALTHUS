@@ -1,68 +1,107 @@
 package malthus.GCP;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 
 
 public class Graph
 {
-	private int[][] adjacencyList;
+	int numNodes;
+	private int[][] edgeList;
 	
 	public Graph( )
 	{
-		adjacencyList = new int[][]{ {-1} };
+		edgeList = new int[][]{ {-1} };
 	}
 	
-	public Graph( int n, String graphFilePath ) throws IOException
+	public Graph( String graphFilePath ) throws IOException
 	{
-		BufferedReader br = new BufferedReader( new FileReader( graphFilePath ) );
-		
-		adjacencyList = new int[ Integer.parseInt( br.readLine() ) ][];
-		preprocess( br );
-		fillGraph( br );
+		int size = getGraphSize( graphFilePath );
+		edgeList = setEdges( graphFilePath, size );
 	}
 	
-	public void preprocess( BufferedReader br ) throws NumberFormatException, IOException
+	public int getGraphSize( String fp ) throws IOException
 	{
-		int i = 0;
-		int j = 1;
-		String line;
+		BufferedReader br = new BufferedReader( new FileReader( fp ) );
+		String line = br.readLine();
+		numNodes = Integer.parseInt( line );
+		int size = 0;
+		while( (line = br.readLine()) != null )
+			size++;
 		
-		while( ( line = br.readLine() ) != null )
+		br.close();
+		return size;
+	}
+	
+	public int[][] setEdges( String fp, int s ) throws IOException
+	{
+		BufferedReader br = new BufferedReader( new FileReader( fp ) );
+		String line = br.readLine();
+		
+		int[][] edges = new int[2][s];
+		int fromNode; 
+		int toNode;
+		
+		for( int i=0; i<s; i++ )
 		{
-			if( Integer.parseInt( line.substring( 0, ' ' ) ) == j )
-				i++;
-			else
-			{
-				adjacencyList[j-1] = new int[i];
-				i = 1;
-				j++;
-			}
+			line = br.readLine();
+			fromNode = Integer.parseInt( line.substring( 0, line.indexOf( ' ' ) ) );
+			toNode = Integer.parseInt( line.substring( line.indexOf( ' ' ) + 1 ) );
+			
+			edges[0][i] = fromNode;
+			edges[1][i] = toNode;
 		}
 		br.close();
+		return edges;
 	}
 	
-	public void fillGraph( BufferedReader br ) throws IOException
+	public int[][] getEdges()
 	{
-		String line;
-		
-		for( int i=0, j=0 ; ( line = br.readLine() ) != null; )
+		return edgeList;
+	}
+	public int getNumNodes()
+	{
+		return numNodes;
+	}
+	
+	public String toString( int[] coloring )
+	{
+		String graph = "\n";
+		for( int i = 0; i<edgeList[1].length; i++ )
 		{
-			if( Integer.parseInt( line.substring( 0, ' ' ) ) - 1 == i )
-			{
-				int toNode = Integer.parseInt( line.substring( line.indexOf( ' ' ) + 1 ) ) - 1;
-				adjacencyList[i][j++] = toNode;
-			}
+			String edge;
+			if( coloring[ edgeList[0][i] ] == coloring[ edgeList[1][i] ] )
+				edge = "--x--";
 			else
-			{
-				i++;
-				j = 0;
-				int toNode = Integer.parseInt( line.substring( line.indexOf( ' ' ) + 1 ) ) - 1;
-				adjacencyList[i][j++] = toNode;
-			}
+				edge = "--O--";
+				
+			graph = graph + edgeList[0][i] + edge + edgeList[1][i] + "\n" ;
+		}	
+		return graph;
+	}
+	
+	
+	public static void main( String[] args )
+	{
+		Graph g = null;
+		int[] coloring = new int[451];
+		for( int i=0; i<451; i++ )
+		{
+			coloring[i] = (int) Math.floor( Math.random() * 10 ); 
 		}
-		br.close();
+		
+		try
+		{
+			g = new Graph( "/Users/MalcolmRoss/Downloads/instances/le450_5a.col" );
+			System.out.println( g.toString( coloring ) );
+			System.out.println( '\07' );
+			System.exit( 1 );
+		} 
+		catch (IOException e)
+		{
+			System.out.println( "ERROR: File not found." );
+			e.printStackTrace();
+		}
 	}
 }

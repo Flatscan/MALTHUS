@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.WeakHashMap;
 import java.lang.ref.WeakReference;
-import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

@@ -11,20 +11,20 @@ import java.util.Random;
  * 
  */
 
-public class GCPGene extends Gene<Boolean>
-{
+public class GCPGene extends Gene<Integer>
+{	
+	private static int max = 450;
+	
 	@Override
 	public double getValue()
 	{
-		if(this.get())
-			return 1.0;
-		return 0.0;
+		return this.get();
 	}
 
 	@Override
-	protected Boolean randomize()
+	protected Integer randomize()
 	{
 		Random rand = new Random();
-		return (rand.nextFloat() > 0.8f) ? true : false;
+		return rand.nextInt(max);
 	}
 }

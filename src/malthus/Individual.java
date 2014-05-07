@@ -58,7 +58,7 @@ public abstract class Individual
  *  
  *  @see #mutate()
  */
-	protected float individualMutationRate;
+	public float individualMutationRate;
 	
 	
 	public static Individual factory(boolean init) {
@@ -120,7 +120,7 @@ public abstract class Individual
  * 
  *  @see #geneMax
  */
-	protected void mutate( )
+	public void mutate( )
 	{
 		// Mutating Decision
 		if(random.nextFloat() < this.individualMutationRate) {

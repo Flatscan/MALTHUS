@@ -9,7 +9,7 @@
 		100
 	</property>
 
-	<property name="gene_size">100</property>
+	<property name="gene_size">450</property>
 
 	<property name="phenotype">
 		malthus.GCP.GCPPhenotype
