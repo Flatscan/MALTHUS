@@ -10,62 +10,84 @@ package malthus.GCP;
  *
  */
 
-import java.util.Random;
+import java.io.IOException;
 
+import malthus.Gene;
 import malthus.Individual;
 
 
 public class GCPIndividual extends Individual
 { 	
-		
-	public GCPIndividual( )
-	{
-		fitness = -1;
-	}
-	
-	public GCPIndividual( int chromosomeSize, Graph g )
-	{
-		genotype = new GCPGene[chromosomeSize];
-		int maxColor = (int) Math.ceil(Math.random() * g.getNumNodes());
-		
-		for( int i=0; i<genotype.length; i++ )
-			genotype[i] = new GCPGene( new Integer( (int) Math.ceil(Math.random() * maxColor) ) );
-		
-		fitness = this.calcFitness( g );
+	private static Graph graph;
+	static {
+		try {
+			graph = new Graph( "/home/hnguyen/Documents/MALTHUS/src/malthus/GCP/le450_5a.col" );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
+	boolean isValidColoring;
+	int maxColor;
+	
+	public GCPIndividual( )
+	{
+		super();
+		this.maxColor = (int) Math.ceil(Math.random() * graph.getNumNodes());
+		
+	}
+
+	
 	@Override
 	protected double calcFitness()
 	{
-		return -1.0;
-	}
-	
-	protected double calcFitness( Graph g )
-	{
-		double maxColor = 0;
 		double invalidColoredEdges = 0;
 		
 		for(int i = 0; i<this.getGenotype().length; i++ )
 		{
-			int fromNode = g.getEdges()[0][i] - 1;
-			int toNode = g.getEdges()[1][i] - 1;
-			if( (this.getGenotype()[ fromNode ]).getValue() == (this.getGenotype()[ toNode ]).getValue() )
+			int fromNode = graph.getEdges()[0][i] - 1;
+			int toNode = graph.getEdges()[1][i] - 1;
+			if( (this.getGenotype()[ fromNode ]).getValue() % this.maxColor == (this.getGenotype()[ toNode ]).getValue() % this.maxColor)
 				invalidColoredEdges++;
-			maxColor = Math.max( maxColor, this.getGenotype()[i].getValue() );
 		}
-		System.out.println( "INVALID: " + invalidColoredEdges + " MAX: " + maxColor );
-		System.out.println( (maxColor / g.getNumNodes()) + (invalidColoredEdges / this.getGenotype().length) );
-		return (maxColor / g.getNumNodes()) + (invalidColoredEdges / this.getGenotype().length);
+		
+		if( invalidColoredEdges == 0 )
+			isValidColoring = true;
+		
+		return (2 - ( this.maxColor / (double) graph.getNumNodes() ) - (  invalidColoredEdges / (double) this.getGenotype().length )) / 2.0;
 	}
 	
-	public Integer randomize( int max )
+	@Override
+	public GCPIndividual reproduce(Individual mate) {
+		GCPIndividual child = (GCPIndividual)factory(false);
+		child.setMaxColor(this.maxColor);
+		
+		Gene<?>[] genotype = this.crossover(mate);
+		child.setGenotype(genotype);
+		child.individualMutationRate = 0.03f;
+		
+		// Mutate
+		child.mutate();
+		
+		return child;
+	}
+	
+	public void setMaxColor( int c )
 	{
-		Random rand = new Random();
-		return new Integer( rand.nextInt() * max );
+		this.maxColor = c;
+	}
+	public boolean isValid()
+	{
+		return this.isValidColoring;
+	}
+	
+	public int getMaxColor()
+	{
+		return this.maxColor;
 	}
 	
 	public String toString()
 	{
-		return "FITNESS: " + fitness;
+		return "FITNESS: " + fitness + "\tMAX COLOR: " + maxColor;
 	}
 }

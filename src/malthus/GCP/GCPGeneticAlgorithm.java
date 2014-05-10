@@ -1,6 +1,8 @@
 package malthus.GCP;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Calendar;
 
 import malthus.Population;
 
@@ -12,29 +14,41 @@ import malthus.Population;
  *
  */
 
+
+
 public class GCPGeneticAlgorithm
 {	
-	public static void main(String[] args) throws IOException
-	{ 
-		Graph g = new Graph( "/Users/MalcolmRoss/Downloads/instances/le450_5a.col" );
-		GCPIndividual[] population = new GCPIndividual[100];
-
-		System.out.println( "\n---INDIVIDUALS---\n" );
-		for( int i=0; i<100; i++ )
-			population[i] = new GCPIndividual( g.getNumNodes(), g );
-		
-		double maxFitness = 0.0;
-		double meanFitness = 0.0;
-		double minFitness = Double.MAX_VALUE;
-		for( int i=0; i<100; i++ )
+	
+	public static int maxNumGenerations = 100;
+	
+	public static void writeData( String s )
+	{
+		Calendar c = Calendar.getInstance();
+		try
 		{
-			double f = population[i].getFitness();
-			maxFitness = Math.max( maxFitness, f );
-			meanFitness += f;
-			minFitness = Math.min( minFitness, f );
+			FileWriter f = new FileWriter( "gcpData." + c.get(Calendar.HOUR_OF_DAY) + "_" + c.get(Calendar.DAY_OF_MONTH) + "_" + c.get(Calendar.MONTH) + "_" + c.get(Calendar.YEAR) + ".csv" );
+			f.write( s );
+			f.close();
+		} 
+		catch (IOException e)
+		{
+			System.out.println( "ERROR: Unable to write data to file." );
+			e.printStackTrace();
 		}
-		meanFitness = meanFitness / 100;
+	}
+	
+	
+	public static void main(String[] args)
+	{ 
+		Population pop1 = Population.factory(true);
+		String csv = "Generation,Max Fit, Min Fit, Mean Fit, Min Valid Color\n0," + pop1 + "," + ( (GCPPopulation) pop1).getMinValidColor() + "\n";
 		
-		System.out.println( "\n---POPULATION---\nMAX: " + maxFitness + "\nMIN: " + minFitness + "\nMEAN: " + meanFitness + "\n" );
+		for(int i = 0; i < 500; i++) {
+			pop1 = pop1.nextGeneration();
+			System.out.println(( (GCPPopulation) pop1).getMinValidColor());
+			csv = csv + (i+1) + "," + pop1 + "," + ( (GCPPopulation) pop1).getMinValidColor() + "\n";
+		}
+
+		writeData(csv);
 	}
 }

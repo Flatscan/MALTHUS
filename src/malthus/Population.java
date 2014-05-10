@@ -29,17 +29,17 @@ public abstract class Population
 		
 		// Breeding
 		int size = conf.getInt("population_size");
-		Individual[] childrends = new Individual[size];
+		Individual[] children = new Individual[size];
 
 		int[] selected = this.selectIndividuals();
-		for(int i = 0 ; i < childrends.length; i++)
+		for(int i = 0 ; i < children.length; i++)
 		{
 			Individual dad = this.generation[ selected[selectParent()] ];
 			Individual mom = this.generation[ selected[selectParent()] ];
-			childrends[i] = dad.reproduce(mom);
+			children[i] = dad.reproduce(mom);
 		}
 		
-		newPop.setIndividuals(childrends);
+		newPop.setIndividuals(children);
 		return newPop;
 	}
 	
@@ -62,8 +62,8 @@ public abstract class Population
 
 	private void calStatistics()
 	{
-		double max = Double.MAX_VALUE;
-		double min = Double.MIN_VALUE;
+		double max = Double.MIN_VALUE;
+		double min = Double.MAX_VALUE;
 		double ave = 0.0;
 
 
@@ -74,7 +74,6 @@ public abstract class Population
 			
 			// Minimum
 			min = (min > this.generation[i].getFitness()) ? this.generation[i].getFitness() : min;
-
 
 			// Average
 			ave += this.generation[i].getFitness();
@@ -133,5 +132,10 @@ public abstract class Population
 	
 	public Individual getFitest() {
 		return this.generation[ this.generation.length - 1 ];
+	}
+	
+	@Override
+	public String toString() {
+		return this.mostFit + "," + this.leastFit + "," + this.populationFitness; 
 	}
 }

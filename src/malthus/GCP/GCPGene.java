@@ -12,30 +12,19 @@ import java.util.Random;
  */
 
 public class GCPGene extends Gene<Integer>
-{
-	private Integer value; 
+{	
+	private static int max = 450;
 	
-	protected GCPGene( Integer val )
-	{
-		value = val;
-	}
-
 	@Override
 	public double getValue()
 	{
-		return value;
-	}
-
-	public Integer randomize( int max )
-	{
-		Random rand = new Random();
-		System.out.println( rand.nextInt() );
-		return new Integer( rand.nextInt() * max );
+		return this.get();
 	}
 
 	@Override
 	protected Integer randomize()
 	{
-		return new Integer( -1 );
+		Random rand = new Random();
+		return rand.nextInt(max);
 	}
 }
