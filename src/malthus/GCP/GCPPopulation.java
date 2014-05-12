@@ -1,16 +1,17 @@
+/**
+ * @author MalcolmRoss
+ * @author HaoNguyen
+ * 
+ * @version 0.0
+ */
+
 package malthus.GCP;
+
 
 import malthus.Individual;
 import malthus.Population;
 
 import java.util.Random;
-
-/**
- * @author MalcolmRoss
- * @author HaoNguyen
- * @version 0.0
- *
- */
 
 
 public class GCPPopulation extends Population

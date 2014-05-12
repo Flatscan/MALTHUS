@@ -11,7 +11,15 @@ import malthus.Gene;
 
 import java.util.Random;
 
-
+/**
+ * An extension of the Integer typed standard Gene<T> for
+ * use in Graph Coloring Problems (GCP). It contains a 
+ * global max for all GCPGenes that corresponds to the
+ * total number of nodes in the graph (GCPPhenotype to 
+ * be colored.
+ *  
+ * @see	Gene
+ */
 public class GCPGene extends Gene<Integer>
 {	
 	private static int max = 450;

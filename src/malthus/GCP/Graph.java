@@ -5,17 +5,45 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
+/**
+ * A representation of a graph as a list of
+ * node pairs that correspond to the edges in
+ * the graph.
+ * 
+ * This was chosen in part because this is the
+ * way the graphs in DIMACS' benchmark graphs 
+ * are formated, and also because evaluation 
+ * of solutions can be done in linear time.
+ */
 public class Graph
 {
-	int numNodes;
+	/**
+	 * The number of nodes in the graph.
+	 */
+	private int numNodes;
+	/**
+	 * The number of edges in the graph,
+	 * represented as a pair of nodes. 
+	 */
 	private int[][] edgeList;
 	
 	
+	/**
+	 * A dummy default constructor.
+	 */
 	public Graph( )
 	{
 		edgeList = new int[][]{ {-1} };
 	}
 	
+	/**
+	 * Creates a graph from a file based on the DIMACS
+	 * benchmark graph format: the number of nodes in 
+	 * the graph followed by a list of undirected edges.  
+	 * 
+	 * @param graphFilePath
+	 * @throws IOException
+	 */
 	public Graph( String graphFilePath ) throws IOException
 	{
 		int size = getGraphSize( graphFilePath );
@@ -23,6 +51,15 @@ public class Graph
 	}
 	
 	
+	/**
+	 * Reads the first line of a file based on the DIMACS
+	 * benchmark graph format which corresponds to the 
+	 * number of nodes in the graph.
+	 * 
+	 * @param fp
+	 * @return The number of nodes in the graph.
+	 * @throws IOException
+	 */
 	public int getGraphSize( String fp ) throws IOException
 	{
 		BufferedReader br = new BufferedReader( new FileReader( fp ) );
@@ -36,6 +73,16 @@ public class Graph
 		return size;
 	}
 	
+	/**
+	 * Reads the rest of a file based on the DIMACS
+	 * benchmark graph format which correspond to 
+	 * the edges in the graph as pairs of nodes.
+	 * 
+	 * @param fp
+	 * @param s
+	 * @return The edge list as node pairs.
+	 * @throws IOException
+	 */
 	public int[][] setEdges( String fp, int s ) throws IOException
 	{
 		BufferedReader br = new BufferedReader( new FileReader( fp ) );
@@ -57,19 +104,30 @@ public class Graph
 		br.close();
 		return edges;
 	}
+
 	
-	
+	/**
+	 * @return The list of edges in the graph.
+	 */
 	public int[][] getEdges()
 	{
 		return edgeList;
 	}
 	
+	/**
+	 * @return The number of nodes in the graph.
+	 */
 	public int getNumNodes()
 	{
 		return numNodes;
 	}
 	
 	
+	/**
+	 * @return The graph as a list of edges 
+	 * separated by a marking to show if that
+	 * edge is valid or not.
+	 */
 	public String toString( int[] coloring )
 	{
 		String graph = "\n";
