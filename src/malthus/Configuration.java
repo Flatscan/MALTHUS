@@ -1,3 +1,8 @@
+/**
+ * @author HaoNguyen
+ * @version 1.0
+ */
+
 package malthus;
 
 import java.io.File;
@@ -11,43 +16,31 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import malthus.util.ReflectiveUtils;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Document;
+
+import malthus.util.ReflectiveUtils;
 
 
 public class Configuration
 {
 	private static final String CONFIGURATION_FILENAME = "/home/hnguyen/Documents/MALTHUS/src/malthus/DefaultConfiguration.xml";
-
-	/* Multithreading Purpose */
-	private ClassLoader classLoader;
-	{
-		classLoader = Thread.currentThread().getContextClassLoader();
-		if(classLoader == null)
-			classLoader = Configuration.class.getClassLoader();
-	}
-
-
+	
 	private static final Map<ClassLoader, Map< String, WeakReference<Class<?>> >> CACHE_CLASS = new
-		WeakHashMap<ClassLoader, Map< String, WeakReference<Class<?>> >>();
-
-
+			WeakHashMap<ClassLoader, Map< String, WeakReference<Class<?>> >>();
 	private static final Map<String, String> defaultProperties = parse(CONFIGURATION_FILENAME);
-
-
-	private boolean usingDefault;
 	private final Map<String, String> properties;
 
 	
+	private boolean usingDefault;
+	
+
 	public Configuration()
 	{
 		this.usingDefault = true;
 		this.properties = null;
 	}
-
 
 	public Configuration(String fileName)
 	{
@@ -55,6 +48,14 @@ public class Configuration
 		this.usingDefault = false;
 	}
 
+	
+	private ClassLoader classLoader;
+	{
+		classLoader = Thread.currentThread().getContextClassLoader();
+		if(classLoader == null)
+			classLoader = Configuration.class.getClassLoader();
+	}
+	
 
 	private static Map<String, String> parse(String fileName)
 	{
@@ -109,21 +110,18 @@ public class Configuration
 			Configuration.defaultProperties.get(name) : this.properties.get(name);
 	}
 
-
 	public int getInt(String name)
 	{
 		String val = this.get(name);
 		return (val == null) ? null : Integer.parseInt(val);
 	}
 
-
 	public double getDouble(String name)
 	{
 		String val = this.get(name);
 		return (val == null) ? null : Double.parseDouble(val);
 	}
-
-
+	
 	public Class<?> getClass(String name)
 	{
 		String className = this.get(name);
@@ -168,44 +166,31 @@ public class Configuration
 		return clazz;
 	}
 	
-	
-	@SuppressWarnings("unchecked")
-	public <T> Class<T> getClass(String name, Class<T> xFace)
-	{
-		return (Class<T>) this.getClass(name);
-	}
-
-
 	public void set(String name, String value)
 	{
 		Map<String, String> setMap = (this.usingDefault) ? this.properties : Configuration.defaultProperties;
 		setMap.put(name.trim().toLowerCase(), value.trim());
 	}
 
-
 	public void setInt(String name, int value)
 	{
 		this.set(name, value + "");
 	}
 
-
 	public void setDouble(String name, double value)
 	{
 		this.set(name, value + "");
 	}
-
-
+	
 	public void setClass(Class<?> clazz)
 	{
 		this.setClass(clazz.getName(), clazz);
 	}
 
-
 	public void setClass(String name, Class<?> clazz)
 	{
 		this.set(name, clazz.getName());	
 	}
-
 
 	public void setClass(String className)
 	{
@@ -221,6 +206,12 @@ public class Configuration
 		}
 	}
 
+	
+	@SuppressWarnings("unchecked")
+	public <T> Class<T> getClass(String name, Class<T> xFace)
+	{
+		return (Class<T>) this.getClass(name);
+	}
 
 	@SuppressWarnings("unchecked")
 	public <T> T newInstance(String name, Class<T> xface)

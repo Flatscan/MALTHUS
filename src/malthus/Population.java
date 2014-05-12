@@ -1,14 +1,14 @@
-package malthus;
-
-import malthus.util.ReflectiveUtils;
-import malthus.util.Sort;
-
 /**
  * @author MalcolmRoss
  * @author HaoNguyen
- * @version 0.0
- *
+ * 
+ * @version 1.0
  */
+
+package malthus;
+
+import malthus.util.Sort;
+import malthus.util.ReflectiveUtils;
 
 
 public abstract class Population
@@ -23,12 +23,29 @@ public abstract class Population
 	protected double leastFit;
 
 
+	public static Population factory( boolean init ) 
+	{
+		int size = (Integer) conf.getInt("population_size");
+		Class<Population> clazz = conf.getClass("population", Population.class);
+		
+		Population population = ReflectiveUtils.newInstance( clazz );
+		if(init) 
+		{
+			Individual[] generation = new Individual[size];
+			for(int i = 0; i < generation.length; i++)
+				generation[i] = Individual.factory(true);
+			population.setIndividuals( generation );
+		}
+		
+		return population;
+	}
+
+	
 	public Population nextGeneration() 
 	{
 		Population newPop = factory(false);
 		
-		// Breeding
-		int size = conf.getInt("population_size");
+		int size = conf.getInt( "population_size" );
 		Individual[] children = new Individual[size];
 
 		int[] selected = this.selectIndividuals();
@@ -39,43 +56,20 @@ public abstract class Population
 			children[i] = dad.reproduce(mom);
 		}
 		
-		newPop.setIndividuals(children);
+		newPop.setIndividuals( children );
 		return newPop;
 	}
 	
-	
-	public static Population factory(boolean init) {
-		int size = (Integer) conf.getInt("population_size");
-		Class<Population> clazz = conf.getClass("population", Population.class);
-		
-		Population population = ReflectiveUtils.newInstance(clazz);
-		if(init) {
-			Individual[] generation = new Individual[size];
-			for(int i = 0; i < generation.length; i++)
-				generation[i] = Individual.factory(true);
-			population.setIndividuals(generation);
-		}
-		
-		return population;
-	}
-
-
-	private void calStatistics()
+	private void calcStatistics()
 	{
 		double max = Double.MIN_VALUE;
 		double min = Double.MAX_VALUE;
 		double ave = 0.0;
 
-
 		for(int i = 0; i < this.generation.length; i++) 
 		{
-			// Maximum
 			max = (max < this.generation[i].getFitness()) ? this.generation[i].getFitness() : max;
-			
-			// Minimum
 			min = (min > this.generation[i].getFitness()) ? this.generation[i].getFitness() : min;
-
-			// Average
 			ave += this.generation[i].getFitness();
 		}
 
@@ -85,57 +79,48 @@ public abstract class Population
 	}
 
 
-	/**
-	 * Selects individuals within the population and returns the indices
-	 * @return
-	 */
-	protected abstract int[] selectIndividuals( );
+	public Individual getFitest() 
+	{
+		return this.generation[ this.generation.length - 1 ];
+	}
 	
-	
-	/**
-	 * Select a random individual within the selected pool
-	 * @return
-	 */
-	protected abstract int selectParent( );
-	
-
 	public double getPopulationFitness()
 	{
 		return populationFitness;
-	}
-	
+	}	
 
 	public double getMeanPopulationFitness()
 	{
 		return populationFitness;
 	}
 	
-
 	public int getSize()
 	{
 		return generation.length;
 	}
-	
 	
 	public Individual[] getIndividuals()
 	{
 		return generation;
 	}
 
-	
-	public void setIndividuals(Individual[] indvs) {
+	public void setIndividuals(Individual[] indvs) 
+	{
 		this.generation = indvs;
 		Sort.heap(this.generation);
-		this.calStatistics();
+		this.calcStatistics();
 	}
 	
 	
-	public Individual getFitest() {
-		return this.generation[ this.generation.length - 1 ];
-	}
+	
 	
 	@Override
-	public String toString() {
+	public String toString() 
+	{
 		return this.mostFit + "," + this.leastFit + "," + this.populationFitness; 
 	}
+	
+	
+	protected abstract int[] selectIndividuals( );
+	protected abstract int selectParent( );
 }

@@ -10,6 +10,7 @@ public class Graph
 	int numNodes;
 	private int[][] edgeList;
 	
+	
 	public Graph( )
 	{
 		edgeList = new int[][]{ {-1} };
@@ -20,6 +21,7 @@ public class Graph
 		int size = getGraphSize( graphFilePath );
 		edgeList = setEdges( graphFilePath, size );
 	}
+	
 	
 	public int getGraphSize( String fp ) throws IOException
 	{
@@ -56,14 +58,17 @@ public class Graph
 		return edges;
 	}
 	
+	
 	public int[][] getEdges()
 	{
 		return edgeList;
 	}
+	
 	public int getNumNodes()
 	{
 		return numNodes;
 	}
+	
 	
 	public String toString( int[] coloring )
 	{
@@ -79,29 +84,5 @@ public class Graph
 			graph = graph + edgeList[0][i] + edge + edgeList[1][i] + "\n" ;
 		}	
 		return graph;
-	}
-	
-	
-	public static void main( String[] args )
-	{
-		Graph g = null;
-		int[] coloring = new int[451];
-		for( int i=0; i<451; i++ )
-		{
-			coloring[i] = (int) Math.floor( Math.random() * 10 ); 
-		}
-		
-		try
-		{
-			g = new Graph( "/Users/MalcolmRoss/Downloads/instances/le450_5a.col" );
-			System.out.println( g.toString( coloring ) );
-			System.out.println( '\07' );
-			System.exit( 1 );
-		} 
-		catch (IOException e)
-		{
-			System.out.println( "ERROR: File not found." );
-			e.printStackTrace();
-		}
 	}
 }

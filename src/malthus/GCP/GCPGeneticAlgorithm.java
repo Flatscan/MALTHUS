@@ -1,3 +1,10 @@
+/**
+ * @author MalcolmRoss
+ * @author HaoNguyen
+ * 
+ * @version 0.0
+ */
+
 package malthus.GCP;
 
 import java.io.FileWriter;
@@ -6,20 +13,28 @@ import java.util.Calendar;
 
 import malthus.Population;
 
-
-/**
- * @author MalcolmRoss
- * @author HaoNguyen
- * @version 0.0
- *
- */
-
-
-
 public class GCPGeneticAlgorithm
 {	
 	
-	public static int maxNumGenerations = 100;
+	public static int maxNumGen;
+	
+	public static void main(String[] args)
+	{ 
+		maxNumGen = 500;
+		
+		Population pop = Population.factory( true );
+		String csv = "Generation,Max Fit, Min Fit, Mean Fit, Min Valid Color\n0," + pop + "," + ( (GCPPopulation) pop ).getMinValidColor() + "\n";
+		
+		for(int i = 0; i < maxNumGen; i++) 
+		{
+			pop = pop.nextGeneration();
+			System.out.println(( (GCPPopulation) pop).getMinValidColor());
+			csv = csv + (i+1) + "," + pop + "," + ( (GCPPopulation) pop ).getMinValidColor() + "\n";
+		}
+
+		writeData(csv);
+	}
+	
 	
 	public static void writeData( String s )
 	{
@@ -35,20 +50,5 @@ public class GCPGeneticAlgorithm
 			System.out.println( "ERROR: Unable to write data to file." );
 			e.printStackTrace();
 		}
-	}
-	
-	
-	public static void main(String[] args)
-	{ 
-		Population pop1 = Population.factory(true);
-		String csv = "Generation,Max Fit, Min Fit, Mean Fit, Min Valid Color\n0," + pop1 + "," + ( (GCPPopulation) pop1).getMinValidColor() + "\n";
-		
-		for(int i = 0; i < 500; i++) {
-			pop1 = pop1.nextGeneration();
-			System.out.println(( (GCPPopulation) pop1).getMinValidColor());
-			csv = csv + (i+1) + "," + pop1 + "," + ( (GCPPopulation) pop1).getMinValidColor() + "\n";
-		}
-
-		writeData(csv);
 	}
 }

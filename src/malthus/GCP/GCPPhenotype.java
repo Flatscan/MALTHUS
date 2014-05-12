@@ -2,10 +2,10 @@ package malthus.GCP;
 
 
 import malthus.Gene;
-import malthus.Phenotype;
+import malthus.Allele;
 
 
-public class GCPPhenotype implements Phenotype
+public class GCPPhenotype implements Allele
 {
 	@Override
 	public Class<? extends Gene<?>> map(int index) 

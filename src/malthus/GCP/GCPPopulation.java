@@ -15,23 +15,27 @@ import java.util.Random;
 
 public class GCPPopulation extends Population
 {	
-	private int minValidColor = 450;
+	private int minValidColor = Integer.MAX_VALUE;
 	
-	public GCPPopulation nextGeneration() {
+	
+	public GCPPopulation nextGeneration() 
+	{
 		GCPPopulation newPop = (GCPPopulation) factory(false);
 		
-		// Breeding
-		int size = conf.getInt("population_size");
-		Individual[] children = new Individual[size];
+		int size = conf.getInt( "population_size" );
+		GCPIndividual[] children = new GCPIndividual[size];
 
 		int[] selected = this.selectIndividuals();
 		newPop.minValidColor = this.minValidColor;
 
 		for(int i = 0 ; i < children.length; i++)
 		{
-			Individual dad = this.generation[ selected[selectParent()] ];
-			Individual mom = this.generation[ selected[selectParent()] ];
-			children[i] = dad.reproduce(mom);
+			Individual parent1 = this.generation[ selected[selectParent()] ];
+			Individual parent2 = this.generation[ selected[selectParent()] ];
+			children[i] = (GCPIndividual) parent1.reproduce( parent2 );
+			
+			if( children[i].isValid() && children[i].getMaxColor() < this.minValidColor )
+				minValidColor = children[i].getMaxColor();
 		}
 		
 		newPop.setIndividuals(children);
@@ -40,23 +44,16 @@ public class GCPPopulation extends Population
 	
 	@Override
 	protected int[] selectIndividuals( )
-	{
-		for( int i=0; i<this.generation.length; i++ )
-		{
-			GCPIndividual individual = (GCPIndividual) this.generation[i];
-			if( individual.isValid() && individual.getMaxColor() < this.minValidColor )
-				minValidColor = individual.getMaxColor();
-		}
-		
+	{		
 		int[] selected;
 		selected = new int[this.generation.length / 2];
+		
 		for(int i = 0, j = this.generation.length - 1; i < selected.length; i++)
 		{
-			GCPIndividual indi = (GCPIndividual) this.generation[j];
-			indi.setMaxColor( indi.getMaxColor() % (minValidColor + 1) );
+			GCPIndividual gi = (GCPIndividual) this.generation[j];
+			gi.setMaxColor( gi.getMaxColor() % (minValidColor + 1) );
 			selected[i] = j--;
 		}
-
 
 		return selected;
 	}		

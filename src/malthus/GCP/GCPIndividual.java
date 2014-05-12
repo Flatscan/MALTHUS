@@ -19,16 +19,21 @@ import malthus.Individual;
 public class GCPIndividual extends Individual
 { 	
 	private static Graph graph;
-	static {
-		try {
+	static 
+	{
+		try 
+		{
 			graph = new Graph( "/home/hnguyen/Documents/MALTHUS/src/malthus/GCP/le450_5a.col" );
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			e.printStackTrace();
 		}
 	}
 
-	boolean isValidColoring;
 	int maxColor;
+	boolean isValidColoring;
+	
 	
 	public GCPIndividual( )
 	{
@@ -76,6 +81,7 @@ public class GCPIndividual extends Individual
 	{
 		this.maxColor = c;
 	}
+	
 	public boolean isValid()
 	{
 		return this.isValidColoring;
