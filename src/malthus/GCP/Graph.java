@@ -18,11 +18,11 @@ import java.io.IOException;
 public class Graph
 {
 	/**
-	 * The number of nodes in the graph.
+	 * The number of nodes in the Graph.
 	 */
 	private int numNodes;
 	/**
-	 * The number of edges in the graph,
+	 * The number of edges in the Graph,
 	 * represented as a pair of nodes. 
 	 */
 	private int[][] edgeList;
@@ -54,7 +54,7 @@ public class Graph
 	/**
 	 * Reads the first line of a file based on the DIMACS
 	 * benchmark graph format which corresponds to the 
-	 * number of nodes in the graph.
+	 * number of nodes in the Graph.
 	 * 
 	 * @param fp
 	 * @return The number of nodes in the graph.
@@ -107,7 +107,10 @@ public class Graph
 
 	
 	/**
-	 * @return The list of edges in the graph.
+	 * Gets the list of node pairs that make up
+	 * the edgeList of the Graph.
+	 * 
+	 * @return The list of edges in the Graph.
 	 */
 	public int[][] getEdges()
 	{
@@ -115,7 +118,9 @@ public class Graph
 	}
 	
 	/**
-	 * @return The number of nodes in the graph.
+	 * Gets the number of nodes in the Graph.
+	 * 
+	 * @return The number of nodes in the Graph.
 	 */
 	public int getNumNodes()
 	{
@@ -124,7 +129,9 @@ public class Graph
 	
 	
 	/**
-	 * @return The graph as a list of edges 
+	 * Formats the Graph as a String.
+	 * 
+	 * @return The Graph as a list of edges 
 	 * separated by a marking to show if that
 	 * edge is valid or not.
 	 */

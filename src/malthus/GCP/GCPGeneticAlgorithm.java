@@ -33,8 +33,6 @@ public class GCPGeneticAlgorithm
 	
 	/**
 	 * Calls all the GCP specific genetic operators.
-	 * 
-	 * @param args
 	 */
 	public static void main(String[] args)
 	{ 
@@ -59,7 +57,7 @@ public class GCPGeneticAlgorithm
 	 * in csv format to be written to a file 
 	 * whose name is procedurally generated.
 	 * 
-	 * @param s
+	 * @param s The data to be written to a file.
 	 */
 	public static void writeData( String s )
 	{

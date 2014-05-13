@@ -14,11 +14,26 @@ import malthus.Population;
 import java.util.Random;
 
 
+/**
+ * A collection of GCPIndividuals where most of the
+ * actual behavior takes place.
+ */
 public class GCPPopulation extends Population
 {	
+	/**
+	 * The current, minimum valid color for any 
+	 * solution in the GCPPopulation. It is the 
+	 * maximum number of colors any solution
+	 * can have. 
+	 */
 	private int minValidColor = Integer.MAX_VALUE;
 	
-	
+	/**
+	 * Creates a GCPPopulation from the current
+	 * generation by calling the reproduce
+	 * function on two random parents from
+	 * the selected sub-population.
+	 */
 	public GCPPopulation nextGeneration() 
 	{
 		GCPPopulation newPop = (GCPPopulation) factory(false);
@@ -43,6 +58,17 @@ public class GCPPopulation extends Population
 		return newPop;
 	}
 	
+	/**
+	 * The problem specific selection function. 
+	 * 
+	 * For our GCP population we chose an elitist
+	 * selection function which selects the top
+	 * half of the population as the breeding 
+	 * population.
+	 * 
+	 * @return An array of ints corresponding to the
+	 * 		   indexes of the selected GCPIndividuals.
+	 */
 	@Override
 	protected int[] selectIndividuals( )
 	{		
@@ -59,6 +85,10 @@ public class GCPPopulation extends Population
 		return selected;
 	}		
 	
+	/**
+	 * @return A random int less than half the
+	 * generation size. 
+	 */
 	@Override
 	protected int selectParent()
 	{
@@ -66,6 +96,10 @@ public class GCPPopulation extends Population
 		return rand.nextInt(this.generation.length / 2);
 	}
 	
+	
+	/**
+	 * @return The current minimum valid coloring.
+	 */
 	public int getMinValidColor()
 	{
 		return this.minValidColor;

@@ -17,15 +17,15 @@ import malthus.Individual;
 
 
 /** 
- * A particular solution to the GCP for a given graph. 
+ * A particular solution to the GCP for a given Graph. 
  * 
  * @see gcp.txt
  */
 public class GCPIndividual extends Individual
 { 	
 	/**
-	 * The graph (represented as an edge lsit) that 
-	 * all individuals in a population are possible
+	 * The Graph (represented as an edge list) that 
+	 * all GCPIndividuals in a population are possible
 	 * solutions to.
 	 */
 	private static Graph phenotype;
@@ -43,13 +43,15 @@ public class GCPIndividual extends Individual
 
 	/**
 	 * The number of colors that this particular
-	 * Individual is using to color the graph.
+	 * GCPIndividual is using to color the phenotype
+	 * Graph.
 	 * 
 	 * @see gcp.txt
 	 */
 	int maxColor;
+	
 	/**
-	 * True if the Individual is a valid coloring
+	 * True if the GCPIndividual is a valid coloring
 	 * (ie not neighboring edges are the same 
 	 * color) of the give graph.
 	 * 
@@ -62,10 +64,10 @@ public class GCPIndividual extends Individual
 	
 	
 	/**
-	 * Calls the factory for the standard individual 
+	 * Calls the factory for the standard Individual 
 	 * and then sets the maxColor to some random 
 	 * value less than or equal to the number of nodes
-	 * in the graph.
+	 * in the phenotype Graph.
 	 */
 	public GCPIndividual( )
 	{
@@ -75,12 +77,12 @@ public class GCPIndividual extends Individual
 
 	
 	/**
-	 * Iterates over the individual to count the number of 
+	 * Iterates over the individuals to count the number of 
 	 * invalid edges then sets if the coloring is valid or
 	 * not. 
 	 * 
 	 * Returns the fitness as the difference of the max
-	 * color of the individual the number of invalid edges
+	 * color of the GCPIndividual the number of invalid edges
 	 * divided (both normalized) and subtracted from one. 
 	 * 
 	 * @return The fitness of a solution.
@@ -110,12 +112,12 @@ public class GCPIndividual extends Individual
 	 * factory, setting the max color to that of the 
 	 * calling parent. 
 	 * 
-	 * The child's genome is then set to the result
+	 * The child's genotype is then set to the result
 	 * of the crossover of both parents and then
 	 * mutates the child.
 	 * 
 	 * @return The product of crossover and mutation from
-	 * the two parent individuals.
+	 * 		   the two parent individuals.
 	 * @see crossover
 	 */
 	@Override
@@ -135,6 +137,10 @@ public class GCPIndividual extends Individual
 
 	
 	/**
+	 * Returns the boolean for whether or not
+	 * the GCPIndividual has any invalid colored
+	 * edges.
+	 * 
 	 * @return If the coloring is valid or not.
 	 */
 	public boolean isValid()
@@ -143,7 +149,10 @@ public class GCPIndividual extends Individual
 	}
 	
 	/**
-	 * @return The max color of the individual.
+	 * Gets the current number of colors being
+	 * used by this GCPIndividual.
+	 * 
+	 * @return The max color of the GCPIndividual.
 	 */
 	public int getMaxColor()
 	{
@@ -151,6 +160,9 @@ public class GCPIndividual extends Individual
 	}
 	
 	/**
+	 * Sets the current number of colors being 
+	 * used by this GCPIndividual.
+	 * 
 	 * @param The value to set the max color to.
 	 */
 	public void setMaxColor( int c )
@@ -160,7 +172,10 @@ public class GCPIndividual extends Individual
 	
 	
 	/**
-	 * @return The max color of the individual.
+	 * Prints the GCPIndividual as its 
+	 * fitness and maxColor
+	 * 
+	 * @return The GCPIndividual in String form.
 	 */
 	public String toString()
 	{
